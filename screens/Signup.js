@@ -1,18 +1,17 @@
 import React, {useState} from 'react';
 import {StatusBar} from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+//import { NavigationContainer } from '@react-navigation/native';
+//import { createStackNavigator } from '@react-navigation/stack';
 
-import {Formik, FormikContext} from 'formik';
+import {Formik} from 'formik';
 
-import {Octicons, Ionicons, Fontisto} from '@expo/vector-icons';
+import {Octicons, Ionicons} from '@expo/vector-icons';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import {ScrollView} from 'react-native';
 import {
     StyledContainer,
     InnerContainer,
-    PageLogo,
     PageTitle,
     SubTitle,
     StyleFormArea,
@@ -54,9 +53,20 @@ const Signup = ({ navigation}) => {
     }
 
     return(
+
+        
+        <ScrollView style={{width:'100%'}}>
         <StyledContainer>
             <StatusBar style="dark" />
             <InnerContainer>
+
+            <ExtraView>
+                            <ExtraText>IR A PERFIL DE USUARIO </ExtraText>
+                            <TextLink onPress={()=> navigation.navigate('Welcome')}>
+                                <TextLinkContent> WELCOME</TextLinkContent>
+                            </TextLink>
+                        </ExtraView>
+
                 <PageTitle>Talkling/Earthling</PageTitle>
                 <SubTitle>Signup</SubTitle>
 
@@ -152,6 +162,7 @@ const Signup = ({ navigation}) => {
                 </Formik>
             </InnerContainer>
         </StyledContainer>
+        </ScrollView>
     );
 
 };
