@@ -1,16 +1,15 @@
 import React, {useState} from 'react';
 import {StatusBar} from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import {Formik, FormikContext} from 'formik';
+//import { NavigationContainer } from '@react-navigation/native';
+//import { createStackNavigator } from '@react-navigation/stack';
+import {Formik} from 'formik';
 import {Octicons, Ionicons, Fontisto} from '@expo/vector-icons';
+import {ScrollView} from 'react-native';
 
 import {
     StyledContainer,
     InnerContainer,
-    PageLogo,
     PageTitle,
-    SubTitle,
     StyleFormArea,
     LeftIcon,
     StyledInputLabel,
@@ -34,12 +33,13 @@ const {brand,darkLight,primary} =  Colors;
 const Login = ({navigation}) => {
     const [hidePassword,setHidePassword] = useState(true);
     return(
+       <ScrollView style={{width:'100%'}}>
         <StyledContainer>
             <StatusBar style="dark" />
             <InnerContainer>
-                <PageLogo resizeMode="cover" source={require('./../assets/splash.png')} />
+                {/*<PageLogo resizeMode="cover" source={require('./../assets/splash.png')} />*/}
                 <PageTitle>Talkling/Earthling</PageTitle>
-                <SubTitle>Login</SubTitle>
+                
 
                 <Formik
                     initialValues={{email: '', password: ''}}
@@ -93,6 +93,7 @@ const Login = ({navigation}) => {
                 </Formik>
             </InnerContainer>
         </StyledContainer>
+        </ScrollView>
     );
 
 };
@@ -111,6 +112,7 @@ const MyTextInput = ({label, icon, isPassword, hidePassword, setHidePassword, ..
                 </RightIcon>
             )}
         </View>
+      
     )
 }
 
