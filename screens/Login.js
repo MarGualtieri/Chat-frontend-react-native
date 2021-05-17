@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import {StatusBar} from 'expo-status-bar';
-
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import {Formik, FormikContext} from 'formik';
-
 import {Octicons, Ionicons, Fontisto} from '@expo/vector-icons';
 
 import {
@@ -31,7 +31,7 @@ import {View} from 'react-native';
 
 const {brand,darkLight,primary} =  Colors;
 
-const Login = () => {
+const Login = ({navigation}) => {
     const [hidePassword,setHidePassword] = useState(true);
     return(
         <StyledContainer>
@@ -84,7 +84,7 @@ const Login = () => {
                         </StyledButton>
                         <ExtraView>
                             <ExtraText> I don't have an account </ExtraText>
-                            <TextLink>
+                            <TextLink onPress={() => navigation.navigate('Signup')}>
                                 <TextLinkContent> Signup</TextLinkContent>
                             </TextLink>
                         </ExtraView>

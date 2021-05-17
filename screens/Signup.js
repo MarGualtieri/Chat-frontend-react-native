@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import {StatusBar} from 'expo-status-bar';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import {Formik, FormikContext} from 'formik';
 
@@ -33,7 +35,7 @@ import {View, TouchableOpacity} from 'react-native';
 
 const {brand,darkLight,primary} =  Colors;
 
-const Signup = () => {
+const Signup = ({ navigation}) => {
     const [hidePassword,setHidePassword] = useState(true);
     const [show,setShow] = useState(false);
     const [date,setDate] = useState(new Date(2021,0,1));
@@ -141,7 +143,7 @@ const Signup = () => {
                         <Line />
                         <ExtraView>
                             <ExtraText> I already have an account </ExtraText>
-                            <TextLink>
+                            <TextLink onPress={()=> navigation.navigate('Login')}>
                                 <TextLinkContent> Login</TextLinkContent>
                             </TextLink>
                         </ExtraView>
