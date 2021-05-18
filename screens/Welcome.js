@@ -86,7 +86,7 @@ export default function Welcome() {
             
             <View style={styles.titulosMenu}>
             <Text style={{ marginRight: 150 ,color:"white",fontWeight: "bold"}}>Amigos: 12</Text>
-            <Text style={{color:"white",fontWeight: "bold"}}>Sebastian Majul</Text>
+            <Text style={{color:"white",fontWeight: "bold"}}>Sebastian Ortega</Text>
             </View>
             
            <View>
