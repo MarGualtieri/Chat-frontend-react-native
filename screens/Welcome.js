@@ -85,7 +85,10 @@ export default function Welcome() {
           >
             
             <View style={styles.titulosMenu}>
-            <Text style={{ marginRight: 150 ,color:"white",fontWeight: "bold"}}>Amigos: 12</Text>
+            <Text style={{ marginRight: 125,color:"white",fontWeight: "bold"}}>Amigos: 12</Text>
+            
+            <Image source={español} style={styles.banderaIcon} />
+       
             <Text style={{color:"white",fontWeight: "bold"}}>Sebastian Ortega</Text>
             </View>
             
@@ -115,9 +118,10 @@ export default function Welcome() {
           </ImageBackground>
         </View>
 
-        <View style={styles.menu}>
-          <Image source={español} style={styles.bandera} />
-        </View>
+      
+
+        <Text style={{fontSize:20, color:"black",fontWeight: "bold",marginTop:30}}>Elige un idioma para iniciar</Text>
+        <Text style={{fontSize:20, color:"black",fontWeight: "bold"}}>una conversacion en</Text>
 
       
         <StatusBar style="auto" />
@@ -142,6 +146,7 @@ export default function Welcome() {
           </View>
 
           <Text style={styles.input}>{text}</Text>
+          <Text style={styles.continuar}>Continuar</Text>
         </SafeAreaView>
       </View>
     </ScrollView>
@@ -212,12 +217,12 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    height: 100,
-    width: 100,
+    height: 80,
+    width: 80,
     borderRadius: 50,
     marginTop: 20,
     marginBottom: 20,
-    marginRight: 80,
+    marginRight: 40,
 
     //resizeMode:"contain",
   },
@@ -228,6 +233,18 @@ const styles = StyleSheet.create({
     margin: 20,
     borderRadius: 30,
     backgroundColor: "#cf5475", // ROSA
+    color: "white",
+    textAlign: "center",
+    //fontWeight: 'bold',
+    fontSize: 15,
+    padding: 10,
+  },
+  continuar: {
+    // SELECCIONE UN IDIOMA
+
+    margin: 20,
+    borderRadius: 30,
+    backgroundColor: "#1F2937", // ROSA
     color: "white",
     textAlign: "center",
     //fontWeight: 'bold',
@@ -252,6 +269,17 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginLeft: 5,
   },
+
+  banderaIcon: {
+    height: 20,
+    width: 20,
+    borderRadius: 50,
+    marginTop: 0,
+    marginLeft: 0,
+    marginRight: 5,
+  },
+
+
   vistaBandera: {
     flexDirection: "row",
     marginTop: 5,
@@ -272,11 +300,10 @@ const styles = StyleSheet.create({
   logo: {
     height: 120,
     width: 120,
-    marginRight:80,
+    marginRight:90,
     borderRadius: 0,
     marginTop: 25,
     marginLeft:40,
-   
     resizeMode: "contain",
   },
 });
