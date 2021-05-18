@@ -20,6 +20,7 @@ import {
   holandes,
 } from "../components/banderas";
 import logo from "../assets/logo.png";
+import mas from "../assets/mas.png";
 
 
 //-----------------------------------FUNCIONES Y STATES--------------------------
@@ -85,9 +86,9 @@ export default function Welcome() {
           >
             
             <View style={styles.titulosMenu}>
-            <Text style={{ marginRight: 125,color:"white",fontWeight: "bold"}}>Amigos: 12</Text>
-            
-            <Image source={español} style={styles.banderaIcon} />
+            <Text style={{ marginRight: 100,color:"white",fontWeight: "bold"}}><Image source={mas} style={styles.banderaIcon}/>  Amigos: 12</Text>
+          
+            <Image source={español} style={styles.banderaIcon}/>
        
             <Text style={{color:"white",fontWeight: "bold"}}>Sebastian Ortega</Text>
             </View>
