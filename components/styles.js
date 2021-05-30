@@ -18,8 +18,8 @@ const {primary,secondary,third,darkLight,brand,green,red} = Colors;
 
 export const StyledContainer = styled.View`
     flex: 1;
-    padding: 25px;
-    padding-top: ${StatusBarHeight + 10}px;
+    padding: 1px;
+    padding-top: ${StatusBarHeight + 7}px;
     background-color: ${primary};
 `;
 
@@ -115,6 +115,7 @@ export const ButtonText = styled.Text`
 export const MessageBox = styled.Text`
     text-align: center;
     font-size: 13px;
+    color: ${props => props.type == 'SUCCESS' ? green : red}
 `;
 
 export const Line = styled.View`
@@ -128,7 +129,8 @@ export const ExtraView = styled.View`
     justify-content: center;
     flex-direction: row;
     align-items: center;
-    padding: 10px;
+    padding: 1px;
+   
 `;
 
 export const ExtraText = styled.Text`
@@ -146,4 +148,5 @@ export const TextLink = styled.TouchableOpacity`
 export const TextLinkContent = styled.Text`
     color: ${brand};
     font-size: 15px;
+  
 `;
