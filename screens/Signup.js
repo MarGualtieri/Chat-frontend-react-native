@@ -151,6 +151,7 @@ const Signup = ({ navigation }) => {
                   </TextLink>
                 </ExtraView>
               </StyleFormArea>
+
             )}
           </Formik>
         </InnerContainer>
