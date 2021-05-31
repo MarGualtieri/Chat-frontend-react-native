@@ -28,9 +28,19 @@ import logo from "../assets/logo.png";
 import ReviewForm from './reviewForm'
 //-----------------------------------FUNCIONES Y STATES--------------------------
 export default function Welcome({ navigation }) {
+  
+  const idiomas = [
+    { id: 1, name: "Ingles", idioma: ingles, check: false },
+    { id: 2, name: "Español", idioma: español , check: false },
+    { id: 3, name: "Frances", idioma: frances , check: false },
+    { id: 4, name: "Aleman", idioma: aleman , check: false },
+    { id: 5, name: "Holandes", idioma: holandes , check: false },
+  ];
+  
   const [selectedImage, setSelectedImage] = useState(null);
   const [text, onChangeOrigen] = React.useState("Seleccione un idioma");
   const [modalOpen, setModalOpen] = useState(false);
+  const [banderas, setBanderas] = useState(idiomas);
 
   let openImagePicker = async () => {
     let permissionResult = ImagePicker.requestMediaLibraryPermissionsAsync;
@@ -47,59 +57,36 @@ export default function Welcome({ navigation }) {
     return pickerResult;
   };
 
-  const idiomas = [
-    { id: 1, name: "Ingles", idioma: { ingles } },
-    { id: 2, name: "Español", idioma: { español } },
-    { id: 3, name: "Frances", idioma: { frances } },
-    { id: 4, name: "Aleman", idioma: { aleman } },
-    { id: 5, name: "Holandes", idioma: { holandes } },
-  ];
-
   function asignarOrigen(props) {
-    switch (props) {
-      case 0:
-        onChangeOrigen(idiomas[0].name);
-        break;
-      case 1:
-        onChangeOrigen(idiomas[1].name);
-        break;
-      case 2:
-        onChangeOrigen(idiomas[2].name);
-        break;
-      case 3:
-        onChangeOrigen(idiomas[3].name);
-        break;
-      case 4:
-        onChangeOrigen(idiomas[4].name);
-        break;
-
-      default:
-        break;
-    }
+    onChangeOrigen(idiomas[props-1].name)
   }
- {/*-----------------agregar elementosal  modal---------------*/}
-  
 
- const [valores, setValores] = useState([
-   
-  
- ]);
+  function checkFlag(index) {
+    const bandera = {...idiomas[index-1], check: true};
 
-const enviarValores = (values) => {
-  
-  setModalOpen(false);
-  console.log(values)
+    setBanderas(idiomas.map(item => (item.id === index) ? bandera : item))
 
-  values.key = Math.random().toString();
-  setValores((currentReviews) => {
-    return [values, ...currentReviews];
-  });
-  setModalOpen(false);
+  }
 
-  
-   
-  
-};
+
+  {/*-----------------agregar elementosal  modal---------------*/ }
+
+
+  const [valores, setValores] = useState([]);
+
+  const enviarValores = (values) => {
+
+    setModalOpen(false);
+    console.log(values)
+
+    values.key = Math.random().toString();
+    setValores((currentReviews) => {
+      return [values, ...currentReviews];
+    });
+    setModalOpen(false);
+
+
+  };
   //----------------------------------APP--------------------------------------
 
   return (
@@ -122,7 +109,7 @@ const enviarValores = (values) => {
             >
               {/*-----------------titulo boton amigos---------------*/}
               <TouchableOpacity
-                onPress={() => navigation.navigate("Amigos",valores)}
+                onPress={() => navigation.navigate("Amigos", valores)}
                 style={{
                   justifyContent: "center",
                   alignItems: "center",
@@ -177,7 +164,7 @@ const enviarValores = (values) => {
                       uri:
                         selectedImage !== null
                           ? selectedImage.localUri
-                          :"https://upload.wikimedia.org/wikipedia/commons/d/d9/Lionel_Messi_20180626_%28cropped%29.jpg"
+                          : "https://upload.wikimedia.org/wikipedia/commons/d/d9/Lionel_Messi_20180626_%28cropped%29.jpg"
                     }}
                     style={styles.image}
                   />
@@ -187,35 +174,35 @@ const enviarValores = (values) => {
           </ImageBackground>
         </View>
 
-      {/*-----------------MDOAL---------------*/}
+        {/*-----------------MDOAL---------------*/}
         <Modal visible={modalOpen} animationType='slide' transparent={true}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-<View style={styles.modalContent}>
-<MaterialIcons 
-name='close'
-size={24} 
-style={styles.modalClose}
-onPress={() => setModalOpen(false)}
-/>
-<ReviewForm enviarValores={enviarValores} style={styles.formik}/>
-</View>
-</TouchableWithoutFeedback>
-</Modal>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.modalContent}>
+              <MaterialIcons
+                name='close'
+                size={24}
+                style={styles.modalClose}
+                onPress={() => setModalOpen(false)}
+              />
+              <ReviewForm enviarValores={enviarValores} style={styles.formik} />
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
 
-{/* icono por fuera del modal*/}
-<MaterialIcons
-name='add'
-size={24}
-style={styles.modalToggle}
-onPress={() => setModalOpen(true)}
-/>
+        {/* icono por fuera del modal*/}
+        <MaterialIcons
+          name='add'
+          size={24}
+          style={styles.modalToggle}
+          onPress={() => setModalOpen(true)}
+        />
 
-<Text>llegarian valores:  </Text>
-
-
+        <Text>llegarian valores:  </Text>
 
 
-{/*-----------------ELIJA UN IDIOMA---------------*/}
+
+
+        {/*-----------------ELIJA UN IDIOMA---------------*/}
         <Text
           style={{
             fontSize: 20,
@@ -233,6 +220,24 @@ onPress={() => setModalOpen(true)}
         {/*-----------------BANDERAS---------------*/}
         <SafeAreaView>
           <View style={{ flexDirection: "row", marginTop: 5 }}>
+            {
+              banderas.map((idioma) => {
+                return(
+                  <TouchableOpacity onPress={() => {
+                    asignarOrigen(idioma.id)
+                    checkFlag(idioma.id)
+                    }
+                  }>
+                    <Image
+                      source={idioma.idioma}
+                      style={idioma.check ? styles.banderaChecked : styles.bandera}
+                    />
+                  </TouchableOpacity>
+                )
+              })
+            }
+
+            {/*
             <TouchableOpacity onPress={() => asignarOrigen(0)}>
               <Image source={ingles} style={styles.bandera} />
             </TouchableOpacity>
@@ -248,6 +253,8 @@ onPress={() => setModalOpen(true)}
             <TouchableOpacity onPress={() => asignarOrigen(4)}>
               <Image source={holandes} style={styles.bandera} />
             </TouchableOpacity>
+             */}
+
           </View>
 
           <Text style={styles.input}>{text}</Text>
@@ -258,8 +265,8 @@ onPress={() => setModalOpen(true)}
       </View>
     </ScrollView>
   );
- }
-      
+}
+
 
 //----------------------------------ESTILOS-----------------------------------
 
@@ -359,6 +366,15 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginLeft: 5,
   },
+  banderaChecked: {
+    height: 50,
+    width: 50,
+    borderRadius: 50,
+    borderColor: "blue",
+    borderWidth: 4,
+    marginTop: 30,
+    marginLeft: 5,
+  },
 
   banderaIcon: {
     height: 20,
@@ -398,9 +414,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   modalContent: {
-    flex:0.82, // en 1 toma toda la pantalla esto controla el alto del modal
-    marginTop:'auto', // usando valores empieza a recortar el modal desde abajo 
-    backgroundColor:'white',
+    flex: 0.82, // en 1 toma toda la pantalla esto controla el alto del modal
+    marginTop: 'auto', // usando valores empieza a recortar el modal desde abajo 
+    backgroundColor: 'white',
     //width:'50%' recorta tambien
   },
 
