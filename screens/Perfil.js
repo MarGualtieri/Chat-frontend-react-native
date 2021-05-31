@@ -3,7 +3,7 @@ import {Keyboard,StyleSheet, View, Text, TouchableOpacity, FlatList,Modal,Toucha
 import { globalStyles } from "../styles/global";
 import { MaterialIcons } from "@expo/vector-icons";
 import ReviewForm from './reviewForm'
-import Card from "../shared/card";
+import Card from "../components/Card";
 
 export default function Perfil({ navigation }) {
 
@@ -20,10 +20,7 @@ export default function Perfil({ navigation }) {
   ]);
 
 {/*-----------------modal---------------*/}
-const [valores, setValores] = useState([
-   
-  
-]);
+
 
 const enviarValores = (values) => {
  
@@ -44,6 +41,8 @@ const enviarValores = (values) => {
 
   return (
     <View style={styles.container}>
+     <View style={styles.fondo}>
+
      
       <FlatList
         data={reviews}
@@ -62,7 +61,7 @@ const enviarValores = (values) => {
       />
       
 <View style={styles.container}>
-
+<Text style={styles.tex}>EDITAR PERFIL</Text>
 <Modal visible={modalOpen} animationType='slide' transparent={true}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 <View style={styles.modalContent}>
@@ -72,6 +71,7 @@ size={24}
 style={styles.modalClose}
 onPress={() => setModalOpen(false)}
 />
+
 <ReviewForm enviarValores={enviarValores} style={styles.formik}/>
 </View>
 </TouchableWithoutFeedback>
@@ -85,10 +85,10 @@ style={styles.modalToggle}
 onPress={() => setModalOpen(true)}
 />
 
-<Text>EDITAR PERFIL</Text>
+
 
 </View>
-
+</View>
     </View>
   );
 }
@@ -112,12 +112,13 @@ modalContent: {
 modalToggle: {
   justifyContent: 'center',
   alignItems: 'center',
-  marginBottom: 10,
+  marginBottom: 200,
   borderWidth: 2,
   borderColor: 'coral',
   padding: 10,
   borderRadius: 10,
   alignSelf: 'center',
+  
   },
   modalClose: {
   marginTop: 20,
@@ -135,7 +136,20 @@ modalToggle: {
     borderColor: "coral",
     padding: 10,
     borderRadius: 10,
-  
     alignSelf: "center",
   },
+  fondo:{
+width:'100%',
+height:'100%',
+backgroundColor:'#fff0f0' ,
+borderColor:'black',
+borderWidth:1,
+borderRadius:10
+
+  },
+  tex:{
+fontSize:20,
+marginVertical:20
+
+  }
 })

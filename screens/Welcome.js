@@ -55,6 +55,8 @@ export default function Welcome({ navigation }) {
     return pickerResult;
   };
 
+{/*-----------------RESALTADOR DE BANDERA---------------*/}
+
   function asignarOrigen(props) {
     onChangeOrigen(idiomas[props-1].name)
   }
@@ -88,7 +90,7 @@ export default function Welcome({ navigation }) {
             >
               {/*-----------------titulo boton amigos---------------*/}
               <TouchableOpacity
-                onPress={() => navigation.navigate("Amigos", valores)}
+                onPress={() => navigation.navigate("Amigos")}
                 style={{
                   justifyContent: "center",
                   alignItems: "center",
@@ -271,10 +273,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   continuar: {
-    // SELECCIONE UN IDIOMA
-
+    // CONTINUAR 
+    marginVertical: 0,
     margin: 20,
-
     borderRadius: 30,
     backgroundColor: "#1F2937",
     color: "white",
@@ -296,23 +297,27 @@ const styles = StyleSheet.create({
   bandera: {
     height: 50,
     width: 50,
-    borderRadius: 50,
+    borderRadius: 10,
     marginTop: 30,
     marginLeft: 5,
+   
+
+
   },
   banderaChecked: {
     height: 50,
     width: 50,
     borderRadius: 50,
     borderColor: "blue",
-    borderWidth: 4,
+    borderWidth: 3,
     marginTop: 30,
     marginLeft: 5,
+
   },
 
   banderaIcon: {
-    height: 20,
-    width: 20,
+    height:25,
+    width: 25,
     borderRadius: 50,
     marginTop: 0,
     marginLeft: 0,
