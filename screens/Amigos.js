@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, FlatList, Image, StyleSheet } from "react-native";
-import { globalStyles, images } from "../styles/global";
+import { globalStyles } from "../styles/global";
 
 const corazones = [
   {
@@ -51,7 +51,7 @@ export default function Amigos({ navigation}) {
         renderItem={({ item }) => (
           <View style={styles.flat}>
             <View style={styles.container}>
-              <Text style={styles.flat}>Nombre: {item.Nombre} </Text>
+              <Text style={[styles.flat,{color:'coral'}]}>Nombre: {item.Nombre} </Text>
               <Text style={styles.flat}>Idioma: {item.Idioma} </Text>
               <Text style={styles.flat}>Ubicacion:{item.Ubicacion}</Text>
           
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "white",
-    backgroundColor: "coral",
+    backgroundColor: "white",
     padding: 5,
     marginTop: 5,
     borderRadius: 10,
@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
     //flexWrap: 'wrap',
     //alignItems: "center",
     //justifyContent: "center",
+    color:'black'
   },
   image: {
     height: 80,
