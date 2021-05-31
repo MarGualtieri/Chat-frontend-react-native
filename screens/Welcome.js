@@ -19,7 +19,7 @@ import {
 
 import {
   ingles,
-  español,
+  espanol,
   frances,
   aleman,
   holandes,
@@ -31,7 +31,7 @@ export default function Welcome({ navigation }) {
   
   const idiomas = [
     { id: 1, name: "Ingles", idioma: ingles, check: false },
-    { id: 2, name: "Español", idioma: español , check: false },
+    { id: 2, name: "Español", idioma: espanol , check: false },
     { id: 3, name: "Frances", idioma: frances , check: false },
     { id: 4, name: "Aleman", idioma: aleman , check: false },
     { id: 5, name: "Holandes", idioma: holandes , check: false },
@@ -144,7 +144,7 @@ export default function Welcome({ navigation }) {
                   flexDirection: "row",
                 }}
               >
-                <Image source={español} style={styles.banderaIcon} />
+                <Image source={espanol} style={styles.banderaIcon} />
                 <Text style={{ color: "white", fontWeight: "bold" }}>
                   Lionel Messi
                 </Text>
