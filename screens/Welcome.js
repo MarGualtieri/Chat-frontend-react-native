@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { ScrollView } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 import {
   StyleSheet,
   Text,
@@ -9,7 +10,11 @@ import {
   SafeAreaView,
   Image,
   ImageBackground,
+  Modal,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+  FlatList,
 } from "react-native";
 
 import {
@@ -20,13 +25,22 @@ import {
   holandes,
 } from "../components/banderas";
 import logo from "../assets/logo.png";
-import mas from "../assets/mas.png";
-
-
+import ReviewForm from './reviewForm'
 //-----------------------------------FUNCIONES Y STATES--------------------------
-export default function Welcome() {
+export default function Welcome({ navigation }) {
+  
+  const idiomas = [
+    { id: 1, name: "Ingles", idioma: ingles, check: false },
+    { id: 2, name: "Español", idioma: español , check: false },
+    { id: 3, name: "Frances", idioma: frances , check: false },
+    { id: 4, name: "Aleman", idioma: aleman , check: false },
+    { id: 5, name: "Holandes", idioma: holandes , check: false },
+  ];
+  
   const [selectedImage, setSelectedImage] = useState(null);
   const [text, onChangeOrigen] = React.useState("Seleccione un idioma");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [banderas, setBanderas] = useState(idiomas);
 
   let openImagePicker = async () => {
     let permissionResult = ImagePicker.requestMediaLibraryPermissionsAsync;
@@ -43,92 +57,187 @@ export default function Welcome() {
     return pickerResult;
   };
 
-  const idiomas = [
-    { id: 1, name: "Ingles", idioma: { ingles } },
-    { id: 2, name: "Español", idioma: { español } },
-    { id: 3, name: "Frances", idioma: { frances } },
-    { id: 4, name: "Aleman", idioma: { aleman } },
-    { id: 5, name: "Holandes", idioma: { holandes } },
-  ];
-
   function asignarOrigen(props) {
-    switch (props) {
-      case 0:
-        onChangeOrigen(idiomas[0].name);
-        break;
-      case 1:
-        onChangeOrigen(idiomas[1].name);
-        break;
-      case 2:
-        onChangeOrigen(idiomas[2].name);
-        break;
-      case 3:
-        onChangeOrigen(idiomas[3].name);
-        break;
-      case 4:
-        onChangeOrigen(idiomas[4].name);
-        break;
-
-      default:
-        break;
-    }
+    onChangeOrigen(idiomas[props-1].name)
   }
 
+  function checkFlag(index) {
+    const bandera = {...idiomas[index-1], check: true};
+
+    setBanderas(idiomas.map(item => (item.id === index) ? bandera : item))
+
+  }
+
+
+  {/*-----------------agregar elementosal  modal---------------*/ }
+
+
+  const [valores, setValores] = useState([]);
+
+  const enviarValores = (values) => {
+
+    setModalOpen(false);
+    console.log(values)
+
+    values.key = Math.random().toString();
+    setValores((currentReviews) => {
+      return [values, ...currentReviews];
+    });
+    setModalOpen(false);
+
+
+  };
   //----------------------------------APP--------------------------------------
 
   return (
-    <ScrollView style={{ width: "100%" }}>
+    <ScrollView >
       <View style={styles.container}>
-        <View style={styles.backgroundMenu}>
+        <View style={{ flex: 1, flexDirection: "column" }}>
           <ImageBackground
             source={require("../assets/fondomenu.png")}
             style={styles.cover}
           >
-            
-            <View style={styles.titulosMenu}>
-            <Text style={{ marginRight: 100,color:"white",fontWeight: "bold"}}><Image source={mas} style={styles.banderaIcon}/>  Amigos: 12</Text>
-          
-            <Image source={español} style={styles.banderaIcon}/>
-       
-            <Text style={{color:"white",fontWeight: "bold"}}>Sebastian Ortega</Text>
-            </View>
-            
-           <View>
-
-
-           <View style={styles.titulosMenu2}>
-
-          <Image source={logo} style={styles.logo} />
-
-          <TouchableOpacity onPress={openImagePicker}>
-            <Image
-              source={{
-                uri:
-                  selectedImage !== null
-                    ? selectedImage.localUri
-                    : "http://picsum.photos/100/100",
+            <View
+              style={{
+                flexDirection: "row",
+                marginLeft: 15,
+                marginTop: 0,
+                paddingLeft: 0,
+                paddingRight: 15,
+                flex: 0,
               }}
-              style={styles.image}
-            />
-          </TouchableOpacity>
-        </View>
+            >
+              {/*-----------------titulo boton amigos---------------*/}
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Amigos", valores)}
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "row",
+                }}
+              >
+                <MaterialIcons
+                  style={{ marginLeft: 8 }}
+                  name="account-circle"
+                  size={25}
+                  color="white"
+                />
+
+                <Text
+                  style={{
+                    marginRight: 90,
+                    marginLeft: 5,
+                    color: "white",
+                    fontWeight: "bold",
+                    fontSize: 15,
+                  }}
+                >
+                  Amigos: 12
+                </Text>
+              </TouchableOpacity>
+              {/*-----------------titulo nombre usuario---------------*/}
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Perfil")}
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "row",
+                }}
+              >
+                <Image source={español} style={styles.banderaIcon} />
+                <Text style={{ color: "white", fontWeight: "bold" }}>
+                  Lionel Messi
+                </Text>
+              </TouchableOpacity>
 
 
-           </View>
+              {/*-----------------FIN DE BLOQUE---------------*/}
+            </View>
 
+            <View>
+              <View style={{ flexDirection: "row", marginRight: 20 }}>
+                <Image source={logo} style={styles.logo} />
+
+                <TouchableOpacity onPress={openImagePicker}>
+                  <Image
+                    source={{
+                      uri:
+                        selectedImage !== null
+                          ? selectedImage.localUri
+                          : "https://upload.wikimedia.org/wikipedia/commons/d/d9/Lionel_Messi_20180626_%28cropped%29.jpg"
+                    }}
+                    style={styles.image}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
           </ImageBackground>
         </View>
 
-      
+        {/*-----------------MDOAL---------------*/}
+        <Modal visible={modalOpen} animationType='slide' transparent={true}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.modalContent}>
+              <MaterialIcons
+                name='close'
+                size={24}
+                style={styles.modalClose}
+                onPress={() => setModalOpen(false)}
+              />
+              <ReviewForm enviarValores={enviarValores} style={styles.formik} />
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
 
-        <Text style={{fontSize:20, color:"black",fontWeight: "bold",marginTop:30}}>Elige un idioma para iniciar</Text>
-        <Text style={{fontSize:20, color:"black",fontWeight: "bold"}}>una conversacion en</Text>
+        {/* icono por fuera del modal*/}
+        <MaterialIcons
+          name='add'
+          size={24}
+          style={styles.modalToggle}
+          onPress={() => setModalOpen(true)}
+        />
 
-      
-        <StatusBar style="auto" />
+        <Text>llegarian valores:  </Text>
 
+
+
+
+        {/*-----------------ELIJA UN IDIOMA---------------*/}
+        <Text
+          style={{
+            fontSize: 20,
+            color: "black",
+            fontWeight: "bold",
+            marginTop: 50,
+          }}
+        >
+          Elige un idioma para iniciar
+        </Text>
+        <Text style={{ fontSize: 20, color: "black", fontWeight: "bold" }}>
+          una conversacion en
+        </Text>
+
+        {/*-----------------BANDERAS---------------*/}
         <SafeAreaView>
-          <View style={styles.vistaBandera}>
+          <View style={{ flexDirection: "row", marginTop: 5 }}>
+            {
+              banderas.map((idioma) => {
+                return(
+                  <TouchableOpacity onPress={() => {
+                    asignarOrigen(idioma.id)
+                    checkFlag(idioma.id)
+                    }
+                  }>
+                    <Image
+                      source={idioma.idioma}
+                      style={idioma.check ? styles.banderaChecked : styles.bandera}
+                    />
+                  </TouchableOpacity>
+                )
+              })
+            }
+
+            {/*
             <TouchableOpacity onPress={() => asignarOrigen(0)}>
               <Image source={ingles} style={styles.bandera} />
             </TouchableOpacity>
@@ -144,15 +253,20 @@ export default function Welcome() {
             <TouchableOpacity onPress={() => asignarOrigen(4)}>
               <Image source={holandes} style={styles.bandera} />
             </TouchableOpacity>
+             */}
+
           </View>
 
           <Text style={styles.input}>{text}</Text>
+
           <Text style={styles.continuar}>Continuar</Text>
         </SafeAreaView>
+        <StatusBar style="light" />
       </View>
     </ScrollView>
   );
 }
+
 
 //----------------------------------ESTILOS-----------------------------------
 
@@ -166,31 +280,15 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 
-  backgroundMenu: {
-    // fondo menu principal
-    //flexDirection: "row",
-    //justifyContent: "center",
-    //flex: 1,
-    //backgroundColor: "white",
-    //alignItems: "center",
-    //width: "100%",
-    //height: "20%",
-    //resizeMode: "contain",
-    //resizeMode: "cover",
-    flex: 1,
-    flexDirection: "column",
-  },
-
   cover: {
     flex: 1,
-    resizeMode: "cover",
+    resizeMode: "contain",
     justifyContent: "center",
-    width: 371,
+    //width: '100%',
     height: 211,
   },
 
   text: {
-    // fondo de talki
     fontSize: 30,
     color: "white",
     backgroundColor: "white",
@@ -202,7 +300,6 @@ const styles = StyleSheet.create({
   },
 
   buttonRed: {
-    // boton rojo
     backgroundColor: "#1F2937",
     marginTop: 50,
     borderRadius: 50,
@@ -233,10 +330,9 @@ const styles = StyleSheet.create({
 
     margin: 20,
     borderRadius: 30,
-    backgroundColor: "#cf5475", // ROSA
+    backgroundColor: "#cf5475",
     color: "white",
     textAlign: "center",
-    //fontWeight: 'bold',
     fontSize: 15,
     padding: 10,
   },
@@ -244,11 +340,11 @@ const styles = StyleSheet.create({
     // SELECCIONE UN IDIOMA
 
     margin: 20,
+
     borderRadius: 30,
-    backgroundColor: "#1F2937", // ROSA
+    backgroundColor: "#1F2937",
     color: "white",
     textAlign: "center",
-    //fontWeight: 'bold',
     fontSize: 15,
     padding: 10,
   },
@@ -270,6 +366,15 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginLeft: 5,
   },
+  banderaChecked: {
+    height: 50,
+    width: 50,
+    borderRadius: 50,
+    borderColor: "blue",
+    borderWidth: 4,
+    marginTop: 30,
+    marginLeft: 5,
+  },
 
   banderaIcon: {
     height: 20,
@@ -280,31 +385,62 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
 
-
-  vistaBandera: {
-    flexDirection: "row",
-    marginTop: 5,
-  },
-  
-  titulosMenu: {
-    flexDirection: "row",
-    marginLeft: 15,
-    //marginBottom:150,
-  },
-  titulosMenu2: {
-    flexDirection: "row",
-    //marginLeft: 20,
-    marginRight: 20,
-    //marginBottom:150,
-  },
-
   logo: {
     height: 120,
     width: 120,
-    marginRight:90,
+    marginRight: 90,
     borderRadius: 0,
     marginTop: 25,
-    marginLeft:40,
+    marginLeft: 40,
     resizeMode: "contain",
+  },
+  modalToggle: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 1,
+    borderWidth: 1,
+    borderColor: "coral",
+    padding: 10,
+    borderRadius: 10,
+    alignSelf: "center",
+  },
+  modalClose: {
+    marginTop: 20,
+    marginBottom: 0,
+    borderWidth: 2,
+    borderColor: "coral",
+    padding: 10,
+    borderRadius: 10,
+    alignSelf: "center",
+  },
+  modalContent: {
+    flex: 0.82, // en 1 toma toda la pantalla esto controla el alto del modal
+    marginTop: 'auto', // usando valores empieza a recortar el modal desde abajo 
+    backgroundColor: 'white',
+    //width:'50%' recorta tambien
+  },
+
+  formik: {
+    marginTop: 20,
+    marginBottom: 0,
+    borderWidth: 2,
+    borderColor: "coral",
+    padding: 10,
+    borderRadius: 10,
+    alignSelf: "center",
+  },
+  flat: {
+    flex: 1,
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "white",
+    backgroundColor: "coral",
+    padding: 5,
+    marginTop: 5,
+    borderRadius: 10,
+    flexDirection: "row",
+    //flexWrap: 'wrap',
+    //alignItems: "center",
+    //justifyContent: "center",
   },
 });
