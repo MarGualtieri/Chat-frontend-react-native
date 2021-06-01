@@ -3,29 +3,8 @@ import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
 import { Octicons, Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { ScrollView } from "react-native";
-import {
-  StyledContainer,
-  InnerContainer,
-  StyleFormArea,
-  LeftIcon,
-  StyledInputLabel,
-  StyledTextInput,
-  RightIcon,
-  Colors,
-  StyledButton,
-  ButtonText,
-  MessageBox,
-  Line,
-  ExtraText,
-  ExtraView,
-  TextLink,
-  TextLinkContent,
-} from "./../components/styles";
-
-import { View, TouchableOpacity } from "react-native";
-
-const { brand, darkLight } = Colors;
+import { ScrollView, View, TouchableOpacity, Text, TextInput, StyleSheet } from "react-native";
+import Constants from 'expo-constants';
 
 const Signup = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
@@ -47,15 +26,15 @@ const Signup = ({ navigation }) => {
 
   return (
     <ScrollView style={{ width: "100%" }}>
-      <StyledContainer>
+      <View style={styles.container}>
         <StatusBar style="light" />
-        <InnerContainer>
-          <ExtraView>
-            <ExtraText>IR A PERFIL DE USUARIO </ExtraText>
-            <TextLink onPress={() => navigation.navigate("Welcome")}>
-              <TextLinkContent> WELCOME</TextLinkContent>
-            </TextLink>
-          </ExtraView>
+        <View style={styles.innerContainer}>
+          <View style={styles.extraView}>
+            <Text style={styles.extraText}>IR A PERFIL DE USUARIO </Text>
+            <TouchableOpacity style={styles.textLink} onPress={() => navigation.navigate("Welcome")}>
+              <Text style={styles.textLinkContent}> WELCOME</Text>
+            </TouchableOpacity>
+          </View>
 
           {show && (
             <DateTimePicker
@@ -81,7 +60,7 @@ const Signup = ({ navigation }) => {
             }}
           >
             {({ handleChange, handleBlur, handleSubmit, values }) => (
-              <StyleFormArea>
+              <View style={styles.styleFormArea}>
                 <MyTextInput
                   label="Full Name"
                   icon="person"
@@ -139,23 +118,23 @@ const Signup = ({ navigation }) => {
                   hidePassword={hidePassword}
                   setHidePassword={setHidePassword}
                 />
-                <MessageBox>...</MessageBox>
-                <StyledButton onPress={handleSubmit}>
-                  <ButtonText>Login</ButtonText>
-                </StyledButton>
-                <Line />
-                <ExtraView>
-                  <ExtraText> I already have an account </ExtraText>
-                  <TextLink onPress={() => navigation.navigate("Login")}>
-                    <TextLinkContent> Login</TextLinkContent>
-                  </TextLink>
-                </ExtraView>
-              </StyleFormArea>
+                <Text style={styles.messageBoxRed}>...</Text>
+                <TouchableOpacity style={styles.styledButton} onPress={handleSubmit}>
+                  <Text style={styles.buttonText}>Login</Text>
+                </TouchableOpacity>
+                <View style={styles.line} />
+                <View style={styles.extraView}>
+                  <Text style={styles.extraText}> I already have an account </Text>
+                  <TouchableOpacity style={styles.textLink} onPress={() => navigation.navigate("Login")}>
+                    <Text style={styles.textLinkContent}> Login</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
 
             )}
           </Formik>
-        </InnerContainer>
-      </StyledContainer>
+        </View>
+      </View>
     </ScrollView>
   );
 };
@@ -172,25 +151,25 @@ const MyTextInput = ({
 }) => {
   return (
     <View>
-      <LeftIcon>
+      <View style={styles.leftIcon}>
         <Octicons name={icon} size={30} color={brand} />
-      </LeftIcon>
-      <StyledInputLabel>{label}</StyledInputLabel>
+      </View>
+      <Text style={styles.styledInputLabel}>{label}</Text>
 
       {isPassword && (
-        <RightIcon onPress={() => setHidePassword((prev) => !prev)}>
+        <TouchableOpacity style={styles.rightIcon} onPress={() => setHidePassword((prev) => !prev)}>
           <Ionicons
             name={hidePassword ? "md-eye-off" : "md-eye"}
             size={30}
             color={darkLight}
           />
-        </RightIcon>
+        </TouchableOpacity>
       )}
 
-      {!isDate && <StyledTextInput {...props} />}
+      {!isDate && <TextInput style={styles.styledTextInput} {...props} />}
       {isDate && (
         <TouchableOpacity onPress={showDatePicker}>
-          <StyledTextInput {...props} />
+          <TextInput style={styles.styledTextInput} {...props} />
         </TouchableOpacity>
       )}
     </View>
@@ -198,3 +177,135 @@ const MyTextInput = ({
 };
 
 export default Signup;
+
+//----------------------ESTILOS---------------------
+
+const StatusBarHeight = Constants.statusBarHeight;
+
+export const Colors = {
+  primary: '#ffffff',
+  secondary: '#E5E7EB',
+  third: '#1F2937',
+  darkLight: '#9CA3AF',
+  brand: '#cf5475',
+  green: '#10B981',
+  red: '#EF4444',
+};
+
+const { primary, secondary, third, darkLight, brand, green, red } = Colors;
+
+const styles = StyleSheet.create({
+  logo: {
+    height: 90,
+    width: 120,
+    resizeMode: "contain",
+
+  },
+  container: {
+    flex: 1,
+    padding: 1,
+    paddingTop: StatusBarHeight + 7,
+    backgroundColor: primary
+  },
+  innerContainer: {
+    flex: 1,
+    width: "100%",
+    alignItems: "center",
+  },
+  styleFormArea: {
+    width: "90%"
+  },
+  styledTextInput: {
+    backgroundColor: secondary,
+    padding: 15,
+    paddingLeft: 55,
+    paddingRight: 55,
+    borderRadius: 5,
+    fontSize: 16,
+    height: 60,
+    marginVertical: 3,
+    marginBottom: 10,
+    color: third
+  },
+  styledInputLabel: {
+    color: third,
+    fontSize: 13,
+    textAlign: "left",
+  },
+  leftIcon: {
+    left: 15,
+    top: 38,
+    position: "absolute",
+    zIndex: 1
+  },
+  rightIcon: {
+    right: 15,
+    top: 38,
+    position: "absolute",
+    zIndex: 1
+  },
+  styledButton: { //mejorar estilos de botón cuando sea Google
+    padding: 15,
+    backgroundColor: brand,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 5,
+    marginVertical: 5,
+    height: 60
+  },
+  styledButtonGoogle: {
+    padding: 15,
+    backgroundColor: green,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 5,
+    marginVertical: 5,
+    height: 60,
+    flexDirection: "row",
+  },
+  buttonText: {
+    color: primary,
+    fontSize: 16
+  },
+  buttonTextGoogle: {
+    color: primary,
+    fontSize: 16,
+    padding: 25
+  },
+  messageBoxGreen: {
+    textAlign: "center",
+    fontSize: 13,
+    color: green
+  },
+  messageBoxRed: {
+    textAlign: "center",
+    fontSize: 13,
+    color: red
+  },
+  line: {
+    height: 1,
+    width: "100%",
+    backgroundColor: darkLight,
+    marginVertical: 10
+  },
+  extraView: {
+    justifyContent: "center",
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 1
+  },
+  extraText: {
+    justifyContent: "center",
+    alignContent: "center",
+    color: third,
+    fontSize: 15
+  },
+  textLink: {
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  textLinkContent: {
+    color: brand,
+    fontSize: 15
+  }
+});

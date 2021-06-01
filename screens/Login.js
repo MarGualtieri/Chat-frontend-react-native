@@ -2,32 +2,10 @@ import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
 import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons";
-import { ScrollView, StyleSheet, Image } from "react-native";
+import { ScrollView, StyleSheet, Image, TextInput, Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
 import logo from "../assets/logo.png";
+import Constants from 'expo-constants';
 
-
-import {
-  StyledContainer,
-  InnerContainer,
-  StyleFormArea,
-  LeftIcon,
-  StyledInputLabel,
-  StyledTextInput,
-  RightIcon,
-  Colors,
-  StyledButton,
-  ButtonText,
-  MessageBox,
-  Line,
-  ExtraText,
-  ExtraView,
-  TextLink,
-  TextLinkContent,
-} from "./../components/styles";
-
-import { View, ActivityIndicator } from "react-native";
-
-const { brand, darkLight, primary } = Colors;
 
 const Login = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
@@ -64,8 +42,8 @@ const Login = ({ navigation }) => {
 
   return (
     <ScrollView style={{ width: "100%" }}>
-      <StyledContainer>
-        <InnerContainer>
+      <View style={styles.container}>
+        <View style={styles.innerContainer}>
           <Image source={logo} style={styles.logo} />
 
           <Formik
@@ -86,7 +64,7 @@ const Login = ({ navigation }) => {
               values,
               isSubmitting,
             }) => (
-              <StyleFormArea>
+              <View style={styles.styleFormArea}>
                 <MyTextInput
                   label="Email Address"
                   icon="mail"
@@ -111,56 +89,56 @@ const Login = ({ navigation }) => {
                   setHidePassword={setHidePassword}
                 />
 
-                
 
-                <MessageBox type={messageType}>{message}</MessageBox>
+
+                <Text type={messageType} style={messageType == 'SUCCESS' ? styles.messageBoxGreen : styles.messageBoxRed}>{message}</Text>
                 {!isSubmitting && (
-                  <StyledButton onPress={handleSubmit}>
-                    <ButtonText>Login</ButtonText>
-                  </StyledButton>
+                  <TouchableOpacity style={styles.styledButton} onPress={handleSubmit}>
+                    <Text style={styles.buttonText}>Login</Text>
+                  </TouchableOpacity>
                 )}
 
                 {isSubmitting && (
-                  <StyledButton disabled={true}>
+                  <TouchableOpacity style={styles.styledButton} disabled={true}>
                     <ActivityIndicator size="large" color={primary} />
-                  </StyledButton>
+                  </TouchableOpacity>
                 )}
 
-                <Line />
-
-              
+                <View style={styles.line} />
 
 
 
-                <StyledButton google={true} onPress={handleSubmit}>
+
+
+                <TouchableOpacity style={styles.styledButtonGoogle} onPress={handleSubmit}>
                   <Fontisto name="google" color={primary} size={25} />
-                  <ButtonText google={true}>Sign in with Google</ButtonText>
-                </StyledButton>
-                <ExtraView>
-                  <ExtraText> Forgot password? </ExtraText>
-                  <TextLink onPress={() => navigation.navigate("Signup")}>
-                    <TextLinkContent> Recovery</TextLinkContent>
-                  </TextLink>
+                  <Text style={styles.buttonTextGoogle}>Sign in with Google</Text>
+                </TouchableOpacity>
+                <View style={styles.extraView}>
+                  <Text style={styles.extraText}> Forgot password? </Text>
+                  <TouchableOpacity style={styles.textLink} onPress={() => navigation.navigate("Signup")}>
+                    <Text style={styles.textLinkContent}> Recovery</Text>
+                  </TouchableOpacity>
 
 
 
-                </ExtraView>
-                <View style={{height:10,backgroundColor:'white'}}></View>
-                <ExtraView>
-                  <ExtraText> I don't have an account </ExtraText>
-                  <TextLink onPress={() => navigation.navigate("Signup")}>
-                    <TextLinkContent> Signup</TextLinkContent>
-                    
-                  </TextLink>
-                </ExtraView>
-                <View style={{height:30,backgroundColor:'white'}}></View>
-        
-              </StyleFormArea>
+                </View>
+                <View style={{ height: 10, backgroundColor: 'white' }}></View>
+                <View style={styles.extraView}>
+                  <Text style={styles.extraText}> I don't have an account </Text>
+                  <TouchableOpacity style={styles.textLink} onPress={() => navigation.navigate("Signup")}>
+                    <Text style={styles.textLinkContent}> Signup</Text>
+
+                  </TouchableOpacity>
+                </View>
+                <View style={{ height: 30, backgroundColor: 'white' }}></View>
+
+              </View>
             )}
           </Formik>
-        </InnerContainer>
+        </View>
         <StatusBar style="light" />
-      </StyledContainer>
+      </View>
     </ScrollView>
   );
 };
@@ -175,19 +153,19 @@ const MyTextInput = ({
 }) => {
   return (
     <View>
-      <LeftIcon>
+      <View style={styles.leftIcon}>
         <Octicons name={icon} size={30} color={brand} />
-      </LeftIcon>
-      <StyledInputLabel>{label}</StyledInputLabel>
-      <StyledTextInput {...props} />
+      </View>
+      <Text style={styles.styledInputLabel}>{label}</Text>
+      <TextInput style={styles.styledTextInput} {...props} />
       {isPassword && (
-        <RightIcon onPress={() => setHidePassword((prev) => !prev)}>
+        <TouchableOpacity style={styles.rightIcon} onPress={() => setHidePassword((prev) => !prev)}>
           <Ionicons
             name={hidePassword ? "md-eye-off" : "md-eye"}
             size={30}
             color={darkLight}
           />
-        </RightIcon>
+        </TouchableOpacity>
       )}
     </View>
   );
@@ -195,11 +173,135 @@ const MyTextInput = ({
 
 export default Login;
 
+
+//--------------------ESTILOS-----------------------
+const StatusBarHeight = Constants.statusBarHeight;
+
+export const Colors = {
+  primary: '#ffffff',
+  secondary: '#E5E7EB',
+  third: '#1F2937',
+  darkLight: '#9CA3AF',
+  brand: '#cf5475',
+  green: '#10B981',
+  red: '#EF4444',
+};
+
+const { primary, secondary, third, darkLight, brand, green, red } = Colors;
+
+
 const styles = StyleSheet.create({
   logo: {
     height: 90,
     width: 120,
     resizeMode: "contain",
-    
+
   },
+  container: {
+    flex: 1,
+    padding: 1,
+    paddingTop: StatusBarHeight + 7,
+    backgroundColor: primary
+  },
+  innerContainer: {
+    flex: 1,
+    width: "100%",
+    alignItems: "center",
+  },
+  styleFormArea: {
+    width: "90%"
+  },
+  styledTextInput: {
+    backgroundColor: secondary,
+    padding: 15,
+    paddingLeft: 55,
+    paddingRight: 55,
+    borderRadius: 5,
+    fontSize: 16,
+    height: 60,
+    marginVertical: 3,
+    marginBottom: 10,
+    color: third
+  },
+  styledInputLabel: {
+    color: third,
+    fontSize: 13,
+    textAlign: "left",
+  },
+  leftIcon: {
+    left: 15,
+    top: 38,
+    position: "absolute",
+    zIndex: 1
+  },
+  rightIcon: {
+    right: 15,
+    top: 38,
+    position: "absolute",
+    zIndex: 1
+  },
+  styledButton: { //mejorar estilos de botón cuando sea Google
+    padding: 15,
+    backgroundColor: brand,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 5,
+    marginVertical: 5,
+    height: 60
+  },
+  styledButtonGoogle: {
+    padding: 15,
+    backgroundColor: green,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 5,
+    marginVertical: 5,
+    height: 60,
+    flexDirection: "row",
+  },
+  buttonText: {
+    color: primary,
+    fontSize: 16
+  },
+  buttonTextGoogle: {
+    color: primary,
+    fontSize: 16,
+    padding: 25
+  },
+  messageBoxGreen: {
+    textAlign: "center",
+    fontSize: 13,
+    color: green
+  },
+  messageBoxRed: {
+    textAlign: "center",
+    fontSize: 13,
+    color: red
+  },
+  line: {
+    height: 1,
+    width: "100%",
+    backgroundColor: darkLight,
+    marginVertical: 10
+  },
+  extraView: {
+    justifyContent: "center",
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 1
+  },
+  extraText: {
+    justifyContent: "center",
+    alignContent: "center",
+    color: third,
+    fontSize: 15
+  },
+  textLink: {
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  textLinkContent: {
+    color: brand,
+    fontSize: 15
+  }
 });
