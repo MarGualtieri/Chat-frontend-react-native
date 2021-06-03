@@ -1,5 +1,6 @@
+import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
-import { View, Text, FlatList, Image, StyleSheet } from "react-native";
+
 import { globalStyles } from "../styles/global";
 
 const corazones = [
@@ -14,35 +15,33 @@ const corazones = [
   },
 ];
 
-export default function Amigos({ navigation}) {
-  
-  
- 
+const amigos = [
+  {
+    Nombre: "Pedro Sanchez ",
+    Idioma: "Español",
+    Ubicacion: "Panama",
+    Rating: 1,
+    key: "1",
+  },
+  {
+    Nombre: "Maria Dival ",
+    Idioma: "Español",
+    Ubicacion: "Chile",
+    Rating: 3,
+    key: "2",
+  },
+  {
+    Nombre: "Jeniffer Lopez ",
+    Idioma: "Ingles",
+    Ubicacion: "Canada",
+    Rating: 2,
+    key: "3",
+  },
+]
 
+export default function Amigos({ navigation }) {
 
-  const [reviews, setReviews] = useState([
-    {
-      Nombre: "Pedro Sanchez ",
-      Idioma: "Español",
-      Ubicacion: "Panama",
-      Rating: 1,
-      key: "1",
-    },
-    {
-      Nombre: "Maria Dival ",
-      Idioma: "Español",
-      Ubicacion: "Chile",
-      Rating: 3,
-      key: "2",
-    },
-    {
-      Nombre: "Jeniffer Lopez ",
-      Idioma: "Ingles",
-      Ubicacion: "Canada",
-      Rating: 2,
-      key: "3",
-    },
-  ]);
+  const [reviews, setReviews] = useState(amigos);
 
   return (
     <View style={globalStyles.container}>
@@ -51,18 +50,16 @@ export default function Amigos({ navigation}) {
         renderItem={({ item }) => (
           <View style={styles.flat}>
             <View style={styles.container}>
-              <Text style={[styles.flat,{color:'coral'}]}>Nombre: {item.Nombre} </Text>
+              <Text style={[styles.flat, { color: 'coral' }]}>Nombre: {item.Nombre} </Text>
               <Text style={styles.flat}>Idioma: {item.Idioma} </Text>
               <Text style={styles.flat}>Ubicacion:{item.Ubicacion}</Text>
-          
-             <View style={styles.valoraciones}>
-            <Text style={{color: 'indigo',fontWeight:'bold',marginHorizontal:15}}>Valoraciones</Text>
-             <Image
-                style={styles.imageIcon}
-                source={corazones[item.Rating - 1].foto}
-              />
-             </View>
-             
+              <View style={styles.valoraciones}>
+                <Text style={{ color: 'black', fontWeight: 'bold', marginHorizontal: 15 }}>Valoraciones</Text>
+                <Image
+                  source={corazones[item.Rating - 1].foto}
+                  style={styles.imageIcon}
+                />
+              </View>
             </View>
             <View style={styles.container2}>
               <Image
@@ -83,43 +80,31 @@ const styles = StyleSheet.create({
   flat: {
     flex: 1,
     fontSize: 18,
+    color: 'black',
     fontWeight: "bold",
-    color: "white",
     backgroundColor: "white",
     padding: 5,
     marginTop: 5,
     borderRadius: 10,
     flexDirection: "row",
-    //flexWrap: 'wrap',
-    //alignItems: "center",
-    //justifyContent: "center",
-    color:'black'
   },
   image: {
     height: 80,
     width: 80,
     borderRadius: 50,
-    //marginTop: 20,
-    // marginBottom: 20,
-    //marginRight: 40,
     flex: 1,
     resizeMode: "contain",
   },
-
   row: {
     flexDirection: "row",
     flex: 1,
   },
   container: {
-    //backgroundColor: "yellow",
     width: "70%",
   },
   container2: {
-    //backgroundColor: "indigo",
     width: "30%",
   },
-
-
   imageIcon: {
     width: 60,
     height: 20,
@@ -129,11 +114,10 @@ const styles = StyleSheet.create({
   valoraciones: {
     flexDirection: "row",
     justifyContent: "center",
-    paddingTop:16,
-    marginTop:16,
-    borderTopWidth:1,
-    borderTopColor:'white',
-    width:'70%'
-  
+    paddingTop: 16,
+    marginTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: 'white',
+    width: '70%'
   },
 });

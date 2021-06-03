@@ -1,27 +1,26 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
-import { ScrollView } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+
 import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
   Image,
   ImageBackground,
-
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
   TouchableOpacity,
-  
+  View,
 } from "react-native";
-
+import React, { useState } from "react";
 import {
-  ingles,
+  aleman,
   espanol,
   frances,
-  aleman,
   holandes,
-} from "../components/banderas";
+  ingles,
+} from "../components/Banderas";
+
+import { MaterialIcons } from "@expo/vector-icons";
+import { StatusBar } from "expo-status-bar";
 import logo from "../assets/logo.png";
 
 //-----------------------------------FUNCIONES Y STATES--------------------------
@@ -63,9 +62,7 @@ export default function Welcome({ navigation }) {
 
   function checkFlag(index) {
     const bandera = {...idiomas[index-1], check: true};
-
     setBanderas(idiomas.map(item => (item.id === index) ? bandera : item))
-
   }
 
   //----------------------------------APP--------------------------------------

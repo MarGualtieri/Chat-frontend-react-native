@@ -1,12 +1,13 @@
-import React from 'react';
 import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+
+import Amigos from './screens/Amigos'
 import Login from './screens/Login'
+import { NavigationContainer } from '@react-navigation/native';
+import Perfil from './screens/Perfil'
+import React from 'react';
 import Signup from './screens/Signup'
 import Welcome from './screens/Welcome'
-import Perfil from './screens/Perfil'
-import Amigos from './screens/Amigos'
+import { createStackNavigator } from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
 

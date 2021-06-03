@@ -1,7 +1,8 @@
-import React from 'react';
-import { StyleSheet, Button, TextInput, View } from 'react-native';
-import { globalStyles } from '../styles/global.js';
+import { Button, StyleSheet, TextInput, View } from 'react-native';
+
 import { Formik } from 'formik';
+import React from 'react';
+import { globalStyles } from '../styles/global.js';
 
 export default function ReviewForm({enviarValores}) {
 

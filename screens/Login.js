@@ -1,17 +1,30 @@
-import React, { useState } from "react";
-import { StatusBar } from "expo-status-bar";
-import { Formik } from "formik";
-import { Octicons, Ionicons, Fontisto } from "@expo/vector-icons";
-import { ScrollView, StyleSheet, Image, TextInput, Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
-import logo from "../assets/logo.png";
-import Constants from 'expo-constants';
+import * as yup from 'yup';
 
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Fontisto, Ionicons, Octicons } from "@expo/vector-icons";
+import { Formik, useFormik } from "formik";
+import React, { useState } from "react";
+
+import Constants from 'expo-constants';
+import { StatusBar } from "expo-status-bar";
+import logo from "../assets/logo.png";
+
+const reviewSchema = yup.object({
+  email: yup.string()
+    .email('Invalid e-mail')
+    .required('An e-mail is required'),
+  password: yup.string()
+    .required('A password is required')
+})
 
 const Login = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [message, setMessage] = useState();
   const [messageType, setMessageType] = useState();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+
+{/**
   const handleLogin = (credentials, setSubmitting) => {
     handleMessage(null);
 
@@ -35,10 +48,12 @@ const Login = ({ navigation }) => {
       });
   };
 
+
   const handleMessage = (message, type = "FAILED") => {
     setMessage(message);
     setMessageType(type);
   };
+   */}
 
   return (
     <ScrollView style={{ width: "100%" }}>
@@ -47,90 +62,80 @@ const Login = ({ navigation }) => {
           <Image source={logo} style={styles.logo} />
 
           <Formik
-            initialValues={{ email: "", password: "" }}
-            onSubmit={(values, { isSubmitting }) => {
-              if (values.email == "" || values.password == "") {
-                handleMessage("por favor rellene los campos");
-                setSubmitted(false);
-              } else {
-                handleMessage(values, setSubmitting);
-              }
-            }}
+            initialValues={{ email: '', password: '' }}
+            validationSchema={reviewSchema}
+            onSubmit={(values, actions) => {
+              actions.resetForm();
+              addReview(values);
+            }
+            }
           >
-            {({
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              values,
-              isSubmitting,
-            }) => (
+            {(props) => (
               <View style={styles.styleFormArea}>
                 <MyTextInput
-                  label="Email Address"
-                  icon="mail"
-                  placeholder="isa@gmail.com"
+                  label='Email Address'
+                  icon='mail'
+                  placeholder='isa@gmail.com'
                   placeholderTextColor={darkLight}
-                  onChangeText={handleChange("email")}
-                  onBlur={handleBlur("email")}
-                  value={values.email}
-                  keyboardType="email-address"
+                  onChangeText={props.handleChange('email')}
+                  onBlur={props.handleBlur('email')}
+                  value={props.values.email}
+                  keyboardType='email-address'
                 />
+                <Text style={styles.messageBoxRed}> {props.touched.email && props.errors.email}</Text>
+
                 <MyTextInput
-                  label="Password"
-                  icon="lock"
-                  placeholder="********"
+                  label='Password'
+                  icon='lock'
+                  placeholder='********'
                   placeholderTextColor={darkLight}
-                  onChangeText={handleChange("password")}
-                  onBlur={handleBlur("password")}
-                  value={values.password}
+                  onChangeText={props.handleChange('password')}
+                  onBlur={props.handleBlur('password')}
+                  value={props.values.password}
                   secureTextEntry={hidePassword}
                   isPassword={true}
                   hidePassword={hidePassword}
                   setHidePassword={setHidePassword}
                 />
 
+                <Text style={styles.messageBoxRed}>{props.touched.password && props.errors.password}</Text>
 
+                {/**  {!isSubmitting && (  */}
 
-                <Text type={messageType} style={messageType == 'SUCCESS' ? styles.messageBoxGreen : styles.messageBoxRed}>{message}</Text>
-                {!isSubmitting && (
-                  <TouchableOpacity style={styles.styledButton} onPress={handleSubmit}>
-                    <Text style={styles.buttonText}>Login</Text>
-                  </TouchableOpacity>
-                )}
+                <TouchableOpacity style={styles.styledButton} onPress={props.handleSubmit}>
+                  <Text style={styles.buttonText}>Login</Text>
+                </TouchableOpacity>
+                {/**  )}  */}
 
-                {isSubmitting && (
+                {/**
+                {isSubmitting && (  
                   <TouchableOpacity style={styles.styledButton} disabled={true}>
                     <ActivityIndicator size="large" color={primary} />
                   </TouchableOpacity>
-                )}
-
+                )}  
+ */}
                 <View style={styles.line} />
 
-
-
-
-
-                <TouchableOpacity style={styles.styledButtonGoogle} onPress={handleSubmit}>
+                <TouchableOpacity style={styles.styledButtonGoogle} onPress={props.handleSubmit}>
                   <Fontisto name="google" color={primary} size={25} />
                   <Text style={styles.buttonTextGoogle}>Sign in with Google</Text>
                 </TouchableOpacity>
+
                 <View style={styles.extraView}>
                   <Text style={styles.extraText}> Forgot password? </Text>
                   <TouchableOpacity style={styles.textLink} onPress={() => navigation.navigate("Signup")}>
                     <Text style={styles.textLinkContent}> Recovery</Text>
                   </TouchableOpacity>
-
-
-
                 </View>
+
                 <View style={{ height: 10, backgroundColor: 'white' }}></View>
                 <View style={styles.extraView}>
                   <Text style={styles.extraText}> I don't have an account </Text>
                   <TouchableOpacity style={styles.textLink} onPress={() => navigation.navigate("Signup")}>
                     <Text style={styles.textLinkContent}> Signup</Text>
-
                   </TouchableOpacity>
                 </View>
+
                 <View style={{ height: 30, backgroundColor: 'white' }}></View>
 
               </View>

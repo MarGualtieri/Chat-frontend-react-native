@@ -1,17 +1,44 @@
+import * as yup from 'yup';
+
+import { Ionicons, Octicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { StatusBar } from "expo-status-bar";
-import { Formik } from "formik";
-import { Octicons, Ionicons } from "@expo/vector-icons";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { ScrollView, View, TouchableOpacity, Text, TextInput, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+
 import Constants from 'expo-constants';
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Formik } from "formik";
+import { StatusBar } from "expo-status-bar";
+
+const reviewSchema = yup.object({
+  fullName: yup
+    .string()
+    .required("A name is required")
+    .min(3, "Name must be at least 2 characters"),
+  email: yup.string()
+    .email('Invalid e-mail')
+    .required('An e-mail is required'),
+  password: yup.string()
+    .required('A password is required')
+    .matches(
+      /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
+      "Password must contain at least 8 characters, one uppercase, one number and one special case character"
+    ),
+    confirmPassword: yup
+    .string()
+    .required("Please confirm your password")
+    .when("password", {
+      is: password => (password && password.length > 0 ? true : false),
+      then: yup.string().oneOf([yup.ref("password")], "Password doesn't match")
+    })
+})
+
 
 const Signup = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date(2021, 0, 1));
 
-  // Actual date picked by user
+  // Fecha elegida por el usuario
   const [dob, setDob] = useState();
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -55,80 +82,94 @@ const Signup = ({ navigation }) => {
               password: "",
               confirmPassword: "",
             }}
-            onSubmit={(values) => {
-              console.log(values);
+            validationSchema={reviewSchema}
+            onSubmit={(values, actions) => {
+              addReview(values)
+              actions.resetForm()
             }}
           >
-            {({ handleChange, handleBlur, handleSubmit, values }) => (
+            {(props) => (
               <View style={styles.styleFormArea}>
                 <MyTextInput
                   label="Full Name"
                   icon="person"
                   placeholder="Isabel Sayago"
                   placeholderTextColor={darkLight}
-                  onChangeText={handleChange("fullName")}
-                  onBlur={handleBlur("fullName")}
-                  value={values.fullName}
+                  onChangeText={props.handleChange("fullName")}
+                  onBlur={props.handleBlur("fullName")}
+                  value={props.values.fullName}
                 />
+                <Text style={styles.messageBoxRed}> {props.touched.fullName && props.errors.fullName}</Text>
+
                 <MyTextInput
                   label="Email Address"
                   icon="mail"
                   placeholder="isa@gmail.com"
                   placeholderTextColor={darkLight}
-                  onChangeText={handleChange("email")}
-                  onBlur={handleBlur("email")}
-                  value={values.email}
+                  onChangeText={props.handleChange("email")}
+                  onBlur={props.handleBlur("email")}
+                  value={props.values.email}
                   keyboardType="email-address"
                 />
+                <Text style={styles.messageBoxRed}> {props.touched.email && props.errors.email}</Text>
+
                 <MyTextInput
                   label="Date of Birth"
                   icon="calendar"
                   placeholder="YYYY/MM/DD"
                   placeholderTextColor={darkLight}
-                  onChangeText={handleChange("dateOfBirth")}
-                  onBlur={handleBlur("dateOfBirth")}
+                  onChangeText={props.handleChange("dateOfBirth")}
+                  onBlur={props.handleBlur("dateOfBirth")}
                   value={dob ? dob.toDateString() : ""}
                   isDate={true}
                   editable={false}
                   showDatePicker={showDatePicker}
                 />
+                <Text style={styles.messageBoxRed}> {props.touched.dateOfBirth && props.errors.dateOfBirth}</Text>
+               
                 <MyTextInput
                   label="Password"
                   icon="lock"
                   placeholder="********"
                   placeholderTextColor={darkLight}
-                  onChangeText={handleChange("password")}
-                  onBlur={handleBlur("password")}
-                  value={values.password}
+                  onChangeText={props.handleChange("password")}
+                  onBlur={props.handleBlur("password")}
+                  value={props.values.password}
                   secureTextEntry={hidePassword}
                   isPassword={true}
                   hidePassword={hidePassword}
                   setHidePassword={setHidePassword}
                 />
+                <Text style={styles.messageBoxRed}> {props.touched.password && props.errors.password}</Text>
+
                 <MyTextInput
                   label="Confirm Password"
                   icon="lock"
                   placeholder="********"
                   placeholderTextColor={darkLight}
-                  onChangeText={handleChange("confirmPassword")}
-                  onBlur={handleBlur("confirmPassword")}
-                  value={values.confirmPassword}
+                  onChangeText={props.handleChange("confirmPassword")}
+                  onBlur={props.handleBlur("confirmPassword")}
+                  value={props.values.confirmPassword}
                   secureTextEntry={hidePassword}
                   isPassword={true}
                   hidePassword={hidePassword}
                   setHidePassword={setHidePassword}
                 />
-                <Text style={styles.messageBoxRed}>...</Text>
-                <TouchableOpacity style={styles.styledButton} onPress={handleSubmit}>
+                <Text style={styles.messageBoxRed}> {props.touched.confirmPassword && props.errors.confirmPassword}</Text>
+              
+                <TouchableOpacity style={styles.styledButton} onPress={props.handleSubmit}>
                   <Text style={styles.buttonText}>Login</Text>
                 </TouchableOpacity>
+
                 <View style={styles.line} />
+
                 <View style={styles.extraView}>
                   <Text style={styles.extraText}> I already have an account </Text>
                   <TouchableOpacity style={styles.textLink} onPress={() => navigation.navigate("Login")}>
                     <Text style={styles.textLinkContent}> Login</Text>
                   </TouchableOpacity>
                 </View>
+                
               </View>
 
             )}

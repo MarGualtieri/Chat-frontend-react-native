@@ -1,9 +1,10 @@
+import { FlatList, Keyboard, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View, } from "react-native";
 import React, { useState } from "react";
-import { Keyboard, StyleSheet, View, Text, TouchableOpacity, FlatList, Modal, TouchableWithoutFeedback, } from "react-native";
-import { globalStyles } from "../styles/global";
+
+import Card from "../components/Card";
 import { MaterialIcons } from "@expo/vector-icons";
 import ReviewForm from './reviewForm'
-import Card from "../components/Card";
+import { globalStyles } from "../styles/global";
 
 export default function Perfil({ navigation }) {
 
