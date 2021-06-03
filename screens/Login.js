@@ -10,10 +10,12 @@ import { StatusBar } from "expo-status-bar";
 import logo from "../assets/logo.png";
 
 const reviewSchema = yup.object({
-  email: yup.string()
+  email: yup
+    .string()
     .email('Invalid e-mail')
     .required('An e-mail is required'),
-  password: yup.string()
+  password: yup
+    .string()
     .required('A password is required')
 })
 

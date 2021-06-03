@@ -14,10 +14,12 @@ const reviewSchema = yup.object({
     .string()
     .required("A name is required")
     .min(3, "Name must be at least 2 characters"),
-  email: yup.string()
+  email: yup
+    .string()
     .email('Invalid e-mail')
     .required('An e-mail is required'),
-  password: yup.string()
+  password: yup
+    .string()
     .required('A password is required')
     .matches(
       /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
