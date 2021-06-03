@@ -13,7 +13,7 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Welcome">
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={Login} options={{ title: 'Login' }}/>
         <Stack.Screen name="Signup" component={Signup} options={{ title: 'Signup' }} />
         <Stack.Screen name="Welcome" component={Welcome} options={{ title: 'Welcome' }} />
