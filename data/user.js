@@ -44,4 +44,4 @@ async function generateJWT(user){
 }
 
 
-module.exports = {addUser, findByCredentials, generateWT};
+module.exports = {addUser, findByCredentials, generateJWT};
