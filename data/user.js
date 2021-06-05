@@ -10,7 +10,7 @@ async function addUser(user){
 	//segunda parámetro (salt), número de iteraciones para hacer la encripción
 	user.password = bcrypt.hashSync(user.password,8);
 
-	const result = await connection.db('TPFinal-TP2')
+	const result = await connectiondb.db('TPFinal-TP2')
 		.collection('Users')
 		.insertOne(user);
 	
@@ -19,7 +19,7 @@ async function addUser(user){
 
 async function findByCredentials(email,password){
 	const connectiondb = await connection.getConnection();
-	const user = await connection.db('TPFinal-TP2')
+	const user = await connectiondb.db('TPFinal-TP2')
 		.collection('Users')
 		.findOne({email:email});
 	if(!user){
