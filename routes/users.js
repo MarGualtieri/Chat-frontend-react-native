@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const data = require('..data/user');
+const data = require('../data/user');
 
 router.get('/',(req,res)=>{
 	res.send('respond with a resource')
@@ -22,3 +22,5 @@ router.post('/login', async(req,res)=>{
 
 
 });
+
+module.exports = router;
