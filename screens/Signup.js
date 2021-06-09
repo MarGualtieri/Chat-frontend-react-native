@@ -25,7 +25,7 @@ const reviewSchema = yup.object({
       /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
       "Password must contain at least 8 characters, one uppercase, one number and one special case character"
     ),
-    confirmPassword: yup
+  confirmPassword: yup
     .string()
     .required("Please confirm your password")
     .when("password", {
@@ -128,7 +128,7 @@ const Signup = ({ navigation }) => {
                   showDatePicker={showDatePicker}
                 />
                 <Text style={styles.messageBoxRed}> {props.touched.dateOfBirth && props.errors.dateOfBirth}</Text>
-               
+
                 <MyTextInput
                   label="Password"
                   icon="lock"
@@ -158,7 +158,7 @@ const Signup = ({ navigation }) => {
                   setHidePassword={setHidePassword}
                 />
                 <Text style={styles.messageBoxRed}> {props.touched.confirmPassword && props.errors.confirmPassword}</Text>
-              
+
                 <TouchableOpacity style={styles.styledButton} onPress={props.handleSubmit}>
                   <Text style={styles.buttonText}>Login</Text>
                 </TouchableOpacity>
@@ -171,7 +171,7 @@ const Signup = ({ navigation }) => {
                     <Text style={styles.textLinkContent}> Login</Text>
                   </TouchableOpacity>
                 </View>
-                
+
               </View>
 
             )}
