@@ -2,12 +2,15 @@ import * as yup from 'yup';
 
 import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Fontisto, Ionicons, Octicons } from "@expo/vector-icons";
-import { Formik, useFormik } from "formik";
 import React, { useState } from "react";
 
 import Constants from 'expo-constants';
+import { Formik } from "formik";
+import { ResponsiveEmbed } from 'react-bootstrap';
 import { StatusBar } from "expo-status-bar";
 import logo from "../assets/logo.png";
+
+const URL_API = "http://localhost:3000/users/login";
 
 const reviewSchema = yup.object({
   email: yup
@@ -21,41 +24,7 @@ const reviewSchema = yup.object({
 
 const Login = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
-  const [message, setMessage] = useState();
-  const [messageType, setMessageType] = useState();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-
-{/**
-  const handleLogin = (credentials, setSubmitting) => {
-    handleMessage(null);
-
-    const url =
-      "mongodb+srv://admin:admin123456@marianocluster.rp4b3.mongodb.net/trabajoPractico?retryWrites=true&w=majority";
-
-    axios
-      .post(url, credentials)
-      .then((response) => {
-        const result = response.data;
-        const { message, status, data } = result;
-
-        navigation.navigate("Welcome");
-
-        setSubmitting(false);
-      })
-      .catch((error) => {
-        console.log(error.JSON());
-        setSubmitting(false);
-        handleMessage("An Error ocurred. Check your network and try again");
-      });
-  };
-
-
-  const handleMessage = (message, type = "FAILED") => {
-    setMessage(message);
-    setMessageType(type);
-  };
-   */}
+  const [loading, setLoading] = useState(false);
 
   return (
     <ScrollView style={{ width: "100%" }}>
@@ -66,9 +35,30 @@ const Login = ({ navigation }) => {
           <Formik
             initialValues={{ email: '', password: '' }}
             validationSchema={reviewSchema}
-            onSubmit={(values, actions) => {
+            onSubmit={async (values, actions) => {
+              const response = await fetch(URL_API, {
+                method: 'POST',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  email: values.email,
+                  password: values.password
+                })
+              }).catch(err => {
+                if (err & err.message) {
+                  console.log(err.message)
+                }
+              })
+              if (response.ok) {
+                const res =  response.json()
+                navigation.navigate("Welcome", { userId: res.user._id, token: res.token })
+              } else {
+                alert("Invalid e-mail or password")
+              }
+              setLoading(false)
               actions.resetForm();
-              addReview(values);
             }
             }
           >
@@ -102,20 +92,29 @@ const Login = ({ navigation }) => {
 
                 <Text style={styles.messageBoxRed}>{props.touched.password && props.errors.password}</Text>
 
-                {/**  {!isSubmitting && (  */}
+                {!loading && (
 
-                <TouchableOpacity style={styles.styledButton} onPress={props.handleSubmit}>
-                  <Text style={styles.buttonText}>Login</Text>
-                </TouchableOpacity>
-                {/**  )}  */}
+                  <TouchableOpacity
+                    style={styles.styledButton}
+                    disabled={!props.isValid}
+                    onPress={() => {
+                      if (props.dirty && props.isValid) {
+                        setLoading(true)
+                        props.handleSubmit()
+                      }
+                    }
+                    }>
+                    <Text style={styles.buttonText} >Login</Text>
+                  </TouchableOpacity>
+                )}
 
-                {/**
-                {isSubmitting && (  
+
+                {loading && (
                   <TouchableOpacity style={styles.styledButton} disabled={true}>
                     <ActivityIndicator size="large" color={primary} />
                   </TouchableOpacity>
-                )}  
- */}
+                )}
+
                 <View style={styles.line} />
 
                 <TouchableOpacity style={styles.styledButtonGoogle} onPress={props.handleSubmit}>
