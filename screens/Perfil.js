@@ -1,13 +1,22 @@
-import { FlatList, Keyboard, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View, } from "react-native";
-import React, { useState } from "react";
-
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  View,
+  Button,
+  ScrollView,
+} from "react-native";
+import React, { useState, useEffect } from "react";
 import Card from "../components/Card";
-import { MaterialIcons } from "@expo/vector-icons";
-import ReviewForm from './reviewForm'
 import { globalStyles } from "../styles/global";
 
-export default function Perfil({ navigation }) {
 
+const USUARIOS = "https://apichathello.herokuapp.com/users";
+
+
+export default function Perfil({ navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
 
   const [reviews, setReviews] = useState([
@@ -20,115 +29,184 @@ export default function Perfil({ navigation }) {
     },
   ]);
 
-  {/*-----------------modal---------------*/ }
+  {
+    /*-----------------USUARIOS BACKEND---------------*/
+  }
 
-
-  const enviarValores = (values) => {
-
-    setModalOpen(false);
-    console.log(values)
-
-    values.key = Math.random().toString();
-    setValores((currentReviews) => {
-      return [values, ...currentReviews];
-    });
-    setModalOpen(false);
+  const [usuarios, setUsuarios] = useState([]);
+  const [nombre, setNombre] = useState("");
+  const [edad, setEdad] = useState();
+  const [email, setEmail] = useState("");
+  const [idioma, setIdioma] = useState("");
 
 
 
+  useEffect(() => {
+    fetch(USUARIOS)
+      .catch()
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setUsuarios(data);
+      });
+  }, []);
 
-  };
-  {/*-----------------fin de modal---------------*/ }
+function editarNombre() {
+
+  fetch(USUARIOS, {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      nombre: nombre,
+      idioma: "Bulgaria",
+      edad : 33,
+      email: "mio",
+      password: "passdddd"
+       
+    })
+  })
+    .then(res => {
+      alert("se ha cambiado su nombre" )
+      
+    })
+    .catch(error => alert(error.message));
+ 
+}
+
+  {
+    /*-----------------app---------------*/
+  }
 
   return (
+    <ScrollView style={{ width: "100%" }}>
     <View style={styles.container}>
       <View style={styles.fondo}>
+       
+       <View>
 
-
-        <FlatList
+       <FlatList
           data={reviews}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => navigation.navigate("ReviewDetails", item)}
             >
               <Card>
-                <Text style={globalStyles.titleText}>NOMBRE: {item.Nombre}</Text>
-                <Text style={globalStyles.titleText}>IDIOMA: {item.Idioma}</Text>
+                <Text style={globalStyles.titleText}>
+                  NOMBRE: {item.Nombre}
+                </Text>
+                <Text style={globalStyles.titleText}>
+                  IDIOMA: {item.Idioma}
+                </Text>
                 <Text style={globalStyles.titleText}>EDAD: {item.Edad}</Text>
-                <Text style={globalStyles.titleText}>MAIL: {item.Mail}</Text>
+                <Text style={globalStyles.titleText}>EMAIL: {item.Mail}</Text>
               </Card>
             </TouchableOpacity>
           )}
         />
-
-        <View style={styles.container}>
-          <Text style={styles.tex}>EDITAR PERFIL</Text>
-          <Modal visible={modalOpen} animationType='slide' transparent={true}>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-              <View style={styles.modalContent}>
-                <MaterialIcons
-                  name='close'
-                  size={24}
-                  style={styles.modalClose}
-                  onPress={() => setModalOpen(false)}
-                />
-
-                <ReviewForm enviarValores={enviarValores} style={styles.formik} />
-              </View>
-            </TouchableWithoutFeedback>
-          </Modal>
-
-          {/* icono por fuera del modal*/}
-          <MaterialIcons
-            name='add'
-            size={24}
-            style={styles.modalToggle}
-            onPress={() => setModalOpen(true)}
+       </View>
+      
+        {/*-----------------TEST USUARIOS---------------*/}
+        <View>
+          <TextInput
+            style={styles.input}
+            onChangeText={text=> setNombre(text)}
+            value={nombre}
+            placeholder=" edite su nombre"
           />
 
+          <View style={{ marginHorizontal: 60 }}>
+            <Button
+              onPress= {editarNombre}
+              title="EDITAR NOMBRE"
+              color="#841584"
+            />
+          </View>
 
-
+          <TextInput
+            style={styles.input}
+            onChangeText={text=> setIdioma(text)}
+            value={idioma}
+            placeholder=" edite su idioma"
+          />
+          <View style={{ marginHorizontal: 60 }}>
+            <Button
+              onPress={() => alert("Right button pressed")}
+              title="EDITAR IDIOMA"
+              color="#841584"
+            />
+          </View>
+          <TextInput
+            style={styles.input}
+            onChangeText={text=> setEdad(text)}
+            value={edad}
+            placeholder=" edite su edad"
+            keyboardType="numeric"
+          />
+          <View style={{ marginHorizontal: 60 }}>
+            <Button
+              onPress={() => alert("Right button pressed")}
+              title="EDITAR EDAD"
+              color="#841584"
+            />
+          </View>
+          <TextInput
+            style={styles.input}
+            onChangeText={text=> setEmail(text)}
+            value={email}
+            placeholder=" edite su email"
+          />
+          <View style={{ marginHorizontal: 60, marginBottom: 15 }}>
+            <Button
+              onPress={() => alert("Right button pressed")}
+              title="EDITAR EMAIL"
+              color="#841584"
+            />
+          </View>
         </View>
+
+        {/*-----------------FIN DE BLOQUE---------------*/}
       </View>
     </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-
   container: {
-
     padding: 20,
-    alignItems: 'center',
+    alignItems: "center",
     justifyContent: "center",
   },
 
   modalContent: {
     flex: 0.62, // en 1 toma toda la pantalla esto controla el alto del modal
-    marginTop: 'auto', // usando valores empieza a recortar el modal desde abajo 
-    backgroundColor: 'white',
+    marginTop: "auto", // usando valores empieza a recortar el modal desde abajo
+    backgroundColor: "white",
     marginHorizontal: 20,
     //width:'50%' recorta tambien
   },
   modalToggle: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 200,
     borderWidth: 2,
-    borderColor: 'coral',
+    borderColor: "coral",
     padding: 10,
     borderRadius: 10,
-    alignSelf: 'center',
-
+    alignSelf: "center",
   },
   modalClose: {
     marginTop: 20,
     marginBottom: 0,
     borderWidth: 2,
-    borderColor: 'coral',
+    borderColor: "coral",
     padding: 10,
     borderRadius: 10,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   formik: {
     marginTop: 20,
@@ -140,17 +218,20 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   fondo: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#fff0f0',
-    borderColor: 'black',
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#fff0f0",
+    borderColor: "black",
     borderWidth: 1,
-    borderRadius: 10
-
+    borderRadius: 10,
   },
   tex: {
     fontSize: 20,
-    marginVertical: 20
-
-  }
-})
+    marginVertical: 20,
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+  },
+});
