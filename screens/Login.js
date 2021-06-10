@@ -10,7 +10,7 @@ import { ResponsiveEmbed } from 'react-bootstrap';
 import { StatusBar } from "expo-status-bar";
 import logo from "../assets/logo.png";
 
-const URL_API = "http://localhost:3000/users/login";
+const URL_API = "https://apichathello.herokuapp.com/login";
 
 const reviewSchema = yup.object({
   email: yup
@@ -52,7 +52,7 @@ const Login = ({ navigation }) => {
                 }
               })
               if (response.ok) {
-                const res =  response.json()
+                const res = await response.json()
                 navigation.navigate("Welcome", { userId: res.user._id, token: res.token })
               } else {
                 alert("Invalid e-mail or password")

@@ -12,20 +12,18 @@ import React, { useState, useEffect } from "react";
 import Card from "../components/Card";
 import { globalStyles } from "../styles/global";
 
+export default function Perfil({ route, navigation }) {
+  const { userId, token, usuario } = route.params;
 
-const USUARIOS = "https://apichathello.herokuapp.com/users";
-
-
-export default function Perfil({ navigation }) {
-  const [modalOpen, setModalOpen] = useState(false);
+  useEffect(() => {}, [reviews]);
 
   const [reviews, setReviews] = useState([
     {
-      Nombre: "Lionel Messi",
-      Idioma: "Español",
-      Mail: "messi@gmail.com",
-      Edad: 34,
-      key: "1",
+      Nombre: usuario.nombre,
+      Idioma: usuario.idioma,
+      Mail: usuario.email,
+      Edad: usuario.edad,
+      key: usuario.id,
     },
   ]);
 
@@ -33,49 +31,33 @@ export default function Perfil({ navigation }) {
     /*-----------------USUARIOS BACKEND---------------*/
   }
 
-  const [usuarios, setUsuarios] = useState([]);
   const [nombre, setNombre] = useState("");
   const [edad, setEdad] = useState();
   const [email, setEmail] = useState("");
   const [idioma, setIdioma] = useState("");
 
+  const USUARIOS = "https://apichathello.herokuapp.com/users/" + userId;
 
-
-  useEffect(() => {
-    fetch(USUARIOS)
-      .catch()
+  function editarNombre() {
+    fetch(USUARIOS, {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nombre: nombre,
+        idioma: idioma,
+        edad: edad,
+        email: email,
+        password: password,
+      }),
+    })
       .then((res) => {
-        return res.json();
+        alert("se ha cambiado su nombre");
       })
-      .then((data) => {
-        setUsuarios(data);
-      });
-  }, []);
-
-function editarNombre() {
-
-  fetch(USUARIOS, {
-    method: 'PUT',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      nombre: nombre,
-      idioma: "Bulgaria",
-      edad : 33,
-      email: "mio",
-      password: "passdddd"
-       
-    })
-  })
-    .then(res => {
-      alert("se ha cambiado su nombre" )
-      
-    })
-    .catch(error => alert(error.message));
- 
-}
+      .catch((error) => alert(error.message));
+  }
 
   {
     /*-----------------app---------------*/
@@ -83,94 +65,96 @@ function editarNombre() {
 
   return (
     <ScrollView style={{ width: "100%" }}>
-    <View style={styles.container}>
-      <View style={styles.fondo}>
-       
-       <View>
-
-       <FlatList
-          data={reviews}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => navigation.navigate("ReviewDetails", item)}
-            >
-              <Card>
-                <Text style={globalStyles.titleText}>
-                  NOMBRE: {item.Nombre}
-                </Text>
-                <Text style={globalStyles.titleText}>
-                  IDIOMA: {item.Idioma}
-                </Text>
-                <Text style={globalStyles.titleText}>EDAD: {item.Edad}</Text>
-                <Text style={globalStyles.titleText}>EMAIL: {item.Mail}</Text>
-              </Card>
-            </TouchableOpacity>
-          )}
-        />
-       </View>
-      
-        {/*-----------------TEST USUARIOS---------------*/}
-        <View>
-          <TextInput
-            style={styles.input}
-            onChangeText={text=> setNombre(text)}
-            value={nombre}
-            placeholder=" edite su nombre"
-          />
-
-          <View style={{ marginHorizontal: 60 }}>
-            <Button
-              onPress= {editarNombre}
-              title="EDITAR NOMBRE"
-              color="#841584"
+      <View style={styles.container}>
+        <View style={styles.fondo}>
+          <View>
+            <FlatList
+              data={reviews}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("ReviewDetails", item)}
+                >
+                  <Card>
+                    <Text style={globalStyles.titleText}>
+                      NOMBRE: {item.Nombre}
+                    </Text>
+                    <Text style={globalStyles.titleText}>
+                      IDIOMA: {item.Idioma}
+                    </Text>
+                    <Text style={globalStyles.titleText}>
+                      EDAD: {item.Edad}
+                    </Text>
+                    <Text style={globalStyles.titleText}>
+                      EMAIL: {item.Mail}
+                    </Text>
+                  </Card>
+                </TouchableOpacity>
+              )}
             />
           </View>
 
-          <TextInput
-            style={styles.input}
-            onChangeText={text=> setIdioma(text)}
-            value={idioma}
-            placeholder=" edite su idioma"
-          />
-          <View style={{ marginHorizontal: 60 }}>
-            <Button
-              onPress={() => alert("Right button pressed")}
-              title="EDITAR IDIOMA"
-              color="#841584"
+          {/*-----------------TEST USUARIOS---------------*/}
+          <View>
+            <TextInput
+              style={styles.input}
+              onChangeText={(text) => setNombre(text)}
+              value={nombre}
+              placeholder=" edite su nombre"
             />
-          </View>
-          <TextInput
-            style={styles.input}
-            onChangeText={text=> setEdad(text)}
-            value={edad}
-            placeholder=" edite su edad"
-            keyboardType="numeric"
-          />
-          <View style={{ marginHorizontal: 60 }}>
-            <Button
-              onPress={() => alert("Right button pressed")}
-              title="EDITAR EDAD"
-              color="#841584"
+
+            <View style={{ marginHorizontal: 60 }}>
+              <Button
+                onPress={editarNombre}
+                title="EDITAR NOMBRE"
+                color="#841584"
+              />
+            </View>
+
+            <TextInput
+              style={styles.input}
+              onChangeText={(text) => setIdioma(text)}
+              value={idioma}
+              placeholder=" edite su idioma"
             />
-          </View>
-          <TextInput
-            style={styles.input}
-            onChangeText={text=> setEmail(text)}
-            value={email}
-            placeholder=" edite su email"
-          />
-          <View style={{ marginHorizontal: 60, marginBottom: 15 }}>
-            <Button
-              onPress={() => alert("Right button pressed")}
-              title="EDITAR EMAIL"
-              color="#841584"
+            <View style={{ marginHorizontal: 60 }}>
+              <Button
+                onPress={() => alert("Right button pressed")}
+                title="EDITAR IDIOMA"
+                color="#841584"
+              />
+            </View>
+            <TextInput
+              style={styles.input}
+              onChangeText={(text) => setEdad(text)}
+              value={edad}
+              placeholder=" edite su edad"
+              keyboardType="numeric"
             />
+            <View style={{ marginHorizontal: 60 }}>
+              <Button
+                onPress={() => alert("Right button pressed")}
+                title="EDITAR EDAD"
+                color="#841584"
+              />
+            </View>
+            <TextInput
+              style={styles.input}
+              onChangeText={(text) => setEmail(text)}
+              value={email}
+              placeholder=" edite su email"
+            />
+            <View style={{ marginHorizontal: 60, marginBottom: 15 }}>
+              <Button
+                onPress={() => alert("Right button pressed")}
+                title="EDITAR EMAIL"
+                color="#841584"
+              />
+            </View>
           </View>
+
+          {/*-----------------FIN DE BLOQUE---------------*/}
         </View>
-
-        {/*-----------------FIN DE BLOQUE---------------*/}
       </View>
-    </View>
     </ScrollView>
   );
 }
