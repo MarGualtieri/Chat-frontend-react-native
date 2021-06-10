@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import {
   aleman,
   espanol,
@@ -24,7 +24,7 @@ import { StatusBar } from "expo-status-bar";
 import logo from "../assets/logo.png";
 
 //-----------------------------------FUNCIONES Y STATES--------------------------
-export default function Welcome({ navigation }) {
+export default function Welcome({ route,navigation }) {
   
   const idiomas = [
     { id: 1, name: "Ingles", idioma: ingles, check: false },
@@ -34,6 +34,9 @@ export default function Welcome({ navigation }) {
     { id: 5, name: "Holandes", idioma: holandes , check: false },
   ];
   
+  const { userId, token } = route.params
+
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [text, onChangeOrigen] = React.useState("Seleccione un idioma");
 
@@ -64,6 +67,19 @@ export default function Welcome({ navigation }) {
     const bandera = {...idiomas[index-1], check: true};
     setBanderas(idiomas.map(item => (item.id === index) ? bandera : item))
   }
+  const [usuario, setUsuario] = useState([]);
+
+  const USUARIOS = "https://apichathello.herokuapp.com/users/"+userId;
+  useEffect(() => {
+    fetch(USUARIOS)
+      .catch()
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setUsuario(data);
+      });
+  }, []);
 
   //----------------------------------APP--------------------------------------
 
@@ -115,7 +131,7 @@ export default function Welcome({ navigation }) {
               </TouchableOpacity>
               {/*-----------------titulo nombre usuario---------------*/}
               <TouchableOpacity
-                onPress={() => navigation.navigate("Perfil")}
+                onPress={() => navigation.navigate("Perfil", { userId, token ,usuario })}
                 style={{
                   justifyContent: "center",
                   alignItems: "center",
