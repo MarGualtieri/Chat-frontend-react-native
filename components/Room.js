@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import io from "socket.io-client";
 
-const socket_url = "http://localhost:3000";
+const socket_url = "https://apichathello.herokuapp.com/";
 
 export default function Room(languageRoom) {
     const [messages, setMessages] = useState([]);
