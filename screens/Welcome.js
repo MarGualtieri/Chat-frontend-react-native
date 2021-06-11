@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState ,useEffect} from "react";
+import React, { useEffect, useState } from "react";
 import {
   aleman,
   espanol,
@@ -24,21 +24,21 @@ import { StatusBar } from "expo-status-bar";
 import logo from "../assets/logo.png";
 
 //-----------------------------------FUNCIONES Y STATES--------------------------
-export default function Welcome({ route,navigation }) {
-  
-  const idiomas = [
-    { id: 1, name: "Ingles", idioma: ingles, check: false },
-    { id: 2, name: "Español", idioma: espanol , check: false },
-    { id: 3, name: "Frances", idioma: frances , check: false },
-    { id: 4, name: "Aleman", idioma: aleman , check: false },
-    { id: 5, name: "Holandes", idioma: holandes , check: false },
-  ];
-  
-  const { userId, token } = route.params
+export default function Welcome({ route, navigation }) {
 
+  const idiomas = [
+    { id: 1, name: "English", idioma: ingles, check: false },
+    { id: 2, name: "Spanish", idioma: espanol, check: false },
+    { id: 3, name: "French", idioma: frances, check: false },
+    { id: 4, name: "German", idioma: aleman, check: false },
+    { id: 5, name: "Dutch", idioma: holandes, check: false },
+  ];
+
+  const { userId, token } = route.params
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [text, onChangeOrigen] = React.useState("Seleccione un idioma");
+ 
 
   const [banderas, setBanderas] = useState(idiomas);
 
@@ -57,21 +57,21 @@ export default function Welcome({ route,navigation }) {
     return pickerResult;
   };
 
-{/*-----------------RESALTADOR DE BANDERA---------------*/}
+  {/*-----------------RESALTADOR DE BANDERA---------------*/ }
 
   function asignarOrigen(props) {
-    onChangeOrigen(idiomas[props-1].name)
+    onChangeOrigen(prev => idiomas[props - 1].name)
   }
 
   function checkFlag(index) {
-    const bandera = {...idiomas[index-1], check: true};
+    const bandera = { ...idiomas[index - 1], check: true };
     setBanderas(idiomas.map(item => (item.id === index) ? bandera : item))
   }
   const [usuario, setUsuario] = useState([]);
 
-  const USUARIOS = "https://apichathello.herokuapp.com/users/"+userId;
+  const userdb = "https://apichathello.herokuapp.com/users/" + userId;
   useEffect(() => {
-    fetch(USUARIOS)
+    fetch(userdb)
       .catch()
       .then((res) => {
         return res.json();
@@ -80,6 +80,7 @@ export default function Welcome({ route,navigation }) {
         setUsuario(data);
       });
   }, []);
+
 
   //----------------------------------APP--------------------------------------
 
@@ -131,7 +132,7 @@ export default function Welcome({ route,navigation }) {
               </TouchableOpacity>
               {/*-----------------titulo nombre usuario---------------*/}
               <TouchableOpacity
-                onPress={() => navigation.navigate("Perfil", { userId, token ,usuario })}
+                onPress={() => navigation.navigate("Perfil", { userId, token, usuario })}
                 style={{
                   justifyContent: "center",
                   alignItems: "center",
@@ -168,7 +169,7 @@ export default function Welcome({ route,navigation }) {
           </ImageBackground>
         </View>
 
-      
+
         {/*-----------------ELIJA UN IDIOMA---------------*/}
         <Text
           style={{
@@ -189,11 +190,11 @@ export default function Welcome({ route,navigation }) {
           <View style={{ flexDirection: "row", marginTop: 5 }}>
             {
               banderas.map((idioma) => {
-                return(
+                return (
                   <TouchableOpacity onPress={() => {
                     asignarOrigen(idioma.id)
                     checkFlag(idioma.id)
-                    }
+                  }
                   }>
                     <Image
                       source={idioma.idioma}
@@ -204,12 +205,20 @@ export default function Welcome({ route,navigation }) {
               })
             }
 
-    
+
           </View>
 
           <Text style={styles.input}>{text}</Text>
+          
+          <TouchableOpacity 
+            onPress={()=>{
+              navigation.navigate("Chat", {user: userId, languageRoom: text})
+              
+            }}
+          >
+            <Text style={styles.continuar}>Continuar</Text>
+          </TouchableOpacity>
 
-          <Text style={styles.continuar}>Continuar</Text>
         </SafeAreaView>
         <StatusBar style="light" />
       </View>
@@ -313,7 +322,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 30,
     marginLeft: 5,
-   
+
 
 
   },
@@ -329,7 +338,7 @@ const styles = StyleSheet.create({
   },
 
   banderaIcon: {
-    height:25,
+    height: 25,
     width: 25,
     borderRadius: 50,
     marginTop: 0,
