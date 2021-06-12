@@ -14,8 +14,9 @@ import { globalStyles } from "../styles/global";
 
 export default function Perfil({ route, navigation }) {
   const { userId, token, usuario } = route.params;
-console.log(usuario)
-  useEffect(() => {}, [reviews]);
+
+  
+
 
   const [reviews, setReviews] = useState([
     {
@@ -54,10 +55,17 @@ console.log(usuario)
       }),
     })
       .then((res) => {
-        alert("se ha cambiado su nombre");
+        alert("Cambio Guardado");
+        //navigation.navigate("Perfil", { userId, token, usuario })
+        actualizar()
       })
       .catch((error) => alert(error.message));
+    
   }
+
+ 
+ 
+ 
 
   {
     /*-----------------app---------------*/
@@ -118,7 +126,7 @@ console.log(usuario)
             />
             <View style={{ marginHorizontal: 60 }}>
               <Button
-                onPress={() => alert("Right button pressed")}
+                onPress={editarNombre}
                 title="EDITAR IDIOMA"
                 color="#841584"
               />
@@ -132,7 +140,7 @@ console.log(usuario)
             />
             <View style={{ marginHorizontal: 60 }}>
               <Button
-                onPress={() => alert("Right button pressed")}
+               onPress={editarNombre}
                 title="EDITAR EDAD"
                 color="#841584"
               />
@@ -145,7 +153,7 @@ console.log(usuario)
             />
             <View style={{ marginHorizontal: 60, marginBottom: 15 }}>
               <Button
-                onPress={() => alert("Right button pressed")}
+                onPress={editarNombre}
                 title="EDITAR EMAIL"
                 color="#841584"
               />

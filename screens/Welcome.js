@@ -70,20 +70,19 @@ export default function Welcome({ route, navigation }) {
   }
   const [usuario, setUsuario] = useState({});
 
-  const USUARIO = "http://localhost:3000/users/:id" + userId;
-  useEffect(()  => {
-    async function  nombreNuevo () {
-      const nombre =  await fetch(USUARIO)
-      console.log('comprobando datos...',nombre)
+  const USUARIOS = "http://localhost:3000/users/"+userId;
+
+  useEffect(() => {
+    fetch(USUARIOS)
+      .catch()
+      .then((res) => {
+       
+        return res.json();
+      })
+      .then((data) => {
       
-      const loquesea = await nombre.json();
-      console.log('comprobando', loquesea)
-  setUsuario(loquesea)
-    
-
-    } 
-     nombreNuevo();
-
+        setUsuario(data);
+      });
   }, []);
 
   //----------------------------------APP--------------------------------------
