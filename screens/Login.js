@@ -52,7 +52,9 @@ const Login = ({ navigation }) => {
                 }
               })
               if (response.ok) {
+
                 const res = await response.json()
+
                 navigation.navigate("Welcome", { userId: res.user._id, token: res.token })
               } else {
                 alert("Invalid e-mail or password")
