@@ -35,7 +35,7 @@ export default function Welcome({ route,navigation }) {
   ];
   
   const { userId, token } = route.params
-
+console.log('comprobando consola...',userId);
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [text, onChangeOrigen] = React.useState("Seleccione un idioma");
@@ -69,15 +69,16 @@ export default function Welcome({ route,navigation }) {
   }
   const [usuario, setUsuario] = useState([]);
 
-  const USUARIOS = "https://apichathello.herokuapp.com/users/"+userId;
+  const USUARIOS = "https://http://localhost:3000/users/"+userId;
   useEffect(() => {
-    fetch(USUARIOS)
+     fetch(USUARIOS)
       .catch()
       .then((res) => {
         return res.json();
       })
       .then((data) => {
         setUsuario(data);
+      
       });
   }, []);
 

@@ -14,7 +14,7 @@ import { globalStyles } from "../styles/global";
 
 export default function Perfil({ route, navigation }) {
   const { userId, token, usuario } = route.params;
-
+console.log(usuario)
   useEffect(() => {}, [reviews]);
 
   const [reviews, setReviews] = useState([
@@ -31,12 +31,12 @@ export default function Perfil({ route, navigation }) {
     /*-----------------USUARIOS BACKEND---------------*/
   }
 
-  const [nombre, setNombre] = useState("");
-  const [edad, setEdad] = useState();
-  const [email, setEmail] = useState("");
-  const [idioma, setIdioma] = useState("");
+  const [nombre, setNombre] = useState(usuario.nombre);
+  const [edad, setEdad] = useState(usuario.edad);
+  const [email, setEmail] = useState(usuario.email);
+  const [idioma, setIdioma] = useState(usuario.idioma);
 
-  const USUARIOS = "https://apichathello.herokuapp.com/users/" + userId;
+  const USUARIOS = "https://apichathello.herokuapp.com/users/"+userId;
 
   function editarNombre() {
     fetch(USUARIOS, {
@@ -50,7 +50,7 @@ export default function Perfil({ route, navigation }) {
         idioma: idioma,
         edad: edad,
         email: email,
-        password: password,
+        
       }),
     })
       .then((res) => {
