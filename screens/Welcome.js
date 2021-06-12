@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
   aleman,
   espanol,
@@ -24,18 +24,17 @@ import { StatusBar } from "expo-status-bar";
 import logo from "../assets/logo.png";
 
 //-----------------------------------FUNCIONES Y STATES--------------------------
-export default function Welcome({ route,navigation }) {
-  
+export default function Welcome({ route, navigation }) {
   const idiomas = [
     { id: 1, name: "Ingles", idioma: ingles, check: false },
-    { id: 2, name: "Español", idioma: espanol , check: false },
-    { id: 3, name: "Frances", idioma: frances , check: false },
-    { id: 4, name: "Aleman", idioma: aleman , check: false },
-    { id: 5, name: "Holandes", idioma: holandes , check: false },
+    { id: 2, name: "Español", idioma: espanol, check: false },
+    { id: 3, name: "Frances", idioma: frances, check: false },
+    { id: 4, name: "Aleman", idioma: aleman, check: false },
+    { id: 5, name: "Holandes", idioma: holandes, check: false },
   ];
+
+  const { userId, token } = route.params;
   
-  const { userId, token } = route.params
-console.log('comprobando consola...',userId);
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [text, onChangeOrigen] = React.useState("Seleccione un idioma");
@@ -57,35 +56,40 @@ console.log('comprobando consola...',userId);
     return pickerResult;
   };
 
-{/*-----------------RESALTADOR DE BANDERA---------------*/}
+  {
+    /*-----------------RESALTADOR DE BANDERA---------------*/
+  }
 
   function asignarOrigen(props) {
-    onChangeOrigen(idiomas[props-1].name)
+    onChangeOrigen(idiomas[props - 1].name);
   }
 
   function checkFlag(index) {
-    const bandera = {...idiomas[index-1], check: true};
-    setBanderas(idiomas.map(item => (item.id === index) ? bandera : item))
+    const bandera = { ...idiomas[index - 1], check: true };
+    setBanderas(idiomas.map((item) => (item.id === index ? bandera : item)));
   }
-  const [usuario, setUsuario] = useState([]);
+  const [usuario, setUsuario] = useState({});
 
-  const USUARIOS = "https://http://localhost:3000/users/"+userId;
-  useEffect(() => {
-     fetch(USUARIOS)
-      .catch()
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setUsuario(data);
+  const USUARIO = "http://localhost:3000/users/:id" + userId;
+  useEffect(()  => {
+    async function  nombreNuevo () {
+      const nombre =  await fetch(USUARIO)
+      console.log('comprobando datos...',nombre)
       
-      });
+      const loquesea = await nombre.json();
+      console.log('comprobando', loquesea)
+  setUsuario(loquesea)
+    
+
+    } 
+     nombreNuevo();
+
   }, []);
 
   //----------------------------------APP--------------------------------------
 
   return (
-    <ScrollView >
+    <ScrollView>
       <View style={styles.container}>
         <View style={{ flex: 1, flexDirection: "column" }}>
           <ImageBackground
@@ -132,7 +136,9 @@ console.log('comprobando consola...',userId);
               </TouchableOpacity>
               {/*-----------------titulo nombre usuario---------------*/}
               <TouchableOpacity
-                onPress={() => navigation.navigate("Perfil", { userId, token ,usuario })}
+                onPress={() =>
+                  navigation.navigate("Perfil", { userId, token, usuario })
+                }
                 style={{
                   justifyContent: "center",
                   alignItems: "center",
@@ -144,7 +150,6 @@ console.log('comprobando consola...',userId);
                   Lionel Messi
                 </Text>
               </TouchableOpacity>
-
 
               {/*-----------------FIN DE BLOQUE---------------*/}
             </View>
@@ -159,7 +164,7 @@ console.log('comprobando consola...',userId);
                       uri:
                         selectedImage !== null
                           ? selectedImage.localUri
-                          : "https://upload.wikimedia.org/wikipedia/commons/d/d9/Lionel_Messi_20180626_%28cropped%29.jpg"
+                          : "https://upload.wikimedia.org/wikipedia/commons/d/d9/Lionel_Messi_20180626_%28cropped%29.jpg",
                     }}
                     style={styles.image}
                   />
@@ -169,7 +174,6 @@ console.log('comprobando consola...',userId);
           </ImageBackground>
         </View>
 
-      
         {/*-----------------ELIJA UN IDIOMA---------------*/}
         <Text
           style={{
@@ -188,24 +192,23 @@ console.log('comprobando consola...',userId);
         {/*-----------------BANDERAS---------------*/}
         <SafeAreaView>
           <View style={{ flexDirection: "row", marginTop: 5 }}>
-            {
-              banderas.map((idioma) => {
-                return(
-                  <TouchableOpacity onPress={() => {
-                    asignarOrigen(idioma.id)
-                    checkFlag(idioma.id)
+            {banderas.map((idioma) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    asignarOrigen(idioma.id);
+                    checkFlag(idioma.id);
+                  }}
+                >
+                  <Image
+                    source={idioma.idioma}
+                    style={
+                      idioma.check ? styles.banderaChecked : styles.bandera
                     }
-                  }>
-                    <Image
-                      source={idioma.idioma}
-                      style={idioma.check ? styles.banderaChecked : styles.bandera}
-                    />
-                  </TouchableOpacity>
-                )
-              })
-            }
-
-    
+                  />
+                </TouchableOpacity>
+              );
+            })}
           </View>
 
           <Text style={styles.input}>{text}</Text>
@@ -287,7 +290,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   continuar: {
-    // CONTINUAR 
+    // CONTINUAR
     marginVertical: 0,
     margin: 20,
     borderRadius: 30,
@@ -314,9 +317,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 30,
     marginLeft: 5,
-   
-
-
   },
   banderaChecked: {
     height: 50,
@@ -326,11 +326,10 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     marginTop: 30,
     marginLeft: 5,
-
   },
 
   banderaIcon: {
-    height:25,
+    height: 25,
     width: 25,
     borderRadius: 50,
     marginTop: 0,
@@ -368,8 +367,8 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     flex: 0.82, // en 1 toma toda la pantalla esto controla el alto del modal
-    marginTop: 'auto', // usando valores empieza a recortar el modal desde abajo 
-    backgroundColor: 'white',
+    marginTop: "auto", // usando valores empieza a recortar el modal desde abajo
+    backgroundColor: "white",
     //width:'50%' recorta tambien
   },
 
