@@ -1,14 +1,15 @@
 import {
+  Button,
   FlatList,
+  ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   TextInput,
+  TouchableOpacity,
   View,
-  Button,
-  ScrollView,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+
 import Card from "../components/Card";
 import { globalStyles } from "../styles/global";
 
@@ -50,8 +51,7 @@ export default function Perfil({ route, navigation }) {
         nombre: nombre,
         idioma: idioma,
         edad: edad,
-        email: email,
-        
+        email: email
       }),
     })
       .then((res) => {
@@ -63,9 +63,6 @@ export default function Perfil({ route, navigation }) {
     
   }
 
- 
- 
- 
 
   {
     /*-----------------app---------------*/
