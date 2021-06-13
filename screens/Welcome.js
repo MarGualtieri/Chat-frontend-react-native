@@ -10,7 +10,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+
 import React, { useEffect, useState } from "react";
+
 import {
   aleman,
   espanol,
@@ -57,26 +59,32 @@ export default function Welcome({ route, navigation }) {
     return pickerResult;
   };
 
-  {/*-----------------RESALTADOR DE BANDERA---------------*/ }
+  {
+    /*-----------------RESALTADOR DE BANDERA---------------*/
+  }
 
   function asignarOrigen(props) {
-    onChangeOrigen(prev => idiomas[props - 1].name)
+    onChangeOrigen(idiomas[props - 1].name);
   }
 
   function checkFlag(index) {
     const bandera = { ...idiomas[index - 1], check: true };
-    setBanderas(idiomas.map(item => (item.id === index) ? bandera : item))
+    setBanderas(idiomas.map((item) => (item.id === index ? bandera : item)));
   }
-  const [usuario, setUsuario] = useState([]);
+  
+  const [usuario, setUsuario] = useState({});
 
   const userdb = "https://apichathello.herokuapp.com/users/" + userId;
+
   useEffect(() => {
     fetch(userdb)
       .catch()
       .then((res) => {
+       
         return res.json();
       })
       .then((data) => {
+      
         setUsuario(data);
       });
   }, []);
@@ -85,7 +93,7 @@ export default function Welcome({ route, navigation }) {
   //----------------------------------APP--------------------------------------
 
   return (
-    <ScrollView >
+    <ScrollView>
       <View style={styles.container}>
         <View style={{ flex: 1, flexDirection: "column" }}>
           <ImageBackground
@@ -145,21 +153,19 @@ export default function Welcome({ route, navigation }) {
                 </Text>
               </TouchableOpacity>
 
-
               {/*-----------------FIN DE BLOQUE---------------*/}
             </View>
 
             <View>
               <View style={{ flexDirection: "row", marginRight: 20 }}>
                 <Image source={logo} style={styles.logo} />
-
                 <TouchableOpacity onPress={openImagePicker}>
                   <Image
                     source={{
                       uri:
                         selectedImage !== null
                           ? selectedImage.localUri
-                          : "https://upload.wikimedia.org/wikipedia/commons/d/d9/Lionel_Messi_20180626_%28cropped%29.jpg"
+                          : "https://upload.wikimedia.org/wikipedia/commons/d/d9/Lionel_Messi_20180626_%28cropped%29.jpg",
                     }}
                     style={styles.image}
                   />
@@ -168,7 +174,6 @@ export default function Welcome({ route, navigation }) {
             </View>
           </ImageBackground>
         </View>
-
 
         {/*-----------------ELIJA UN IDIOMA---------------*/}
         <Text
@@ -204,8 +209,6 @@ export default function Welcome({ route, navigation }) {
                 )
               })
             }
-
-
           </View>
 
           <Text style={styles.input}>{text}</Text>
@@ -279,13 +282,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
     marginRight: 40,
-
     //resizeMode:"contain",
   },
 
   input: {
     // SELECCIONE UN IDIOMA
-
     margin: 20,
     borderRadius: 30,
     backgroundColor: "#cf5475",
@@ -295,7 +296,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   continuar: {
-    // CONTINUAR 
+    // CONTINUAR
     marginVertical: 0,
     margin: 20,
     borderRadius: 30,
@@ -322,9 +323,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 30,
     marginLeft: 5,
-
-
-
   },
   banderaChecked: {
     height: 50,
@@ -334,9 +332,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     marginTop: 30,
     marginLeft: 5,
-
   },
-
   banderaIcon: {
     height: 25,
     width: 25,
@@ -376,8 +372,8 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     flex: 0.82, // en 1 toma toda la pantalla esto controla el alto del modal
-    marginTop: 'auto', // usando valores empieza a recortar el modal desde abajo 
-    backgroundColor: 'white',
+    marginTop: "auto", // usando valores empieza a recortar el modal desde abajo
+    backgroundColor: "white",
     //width:'50%' recorta tambien
   },
 
@@ -399,9 +395,6 @@ const styles = StyleSheet.create({
     padding: 5,
     marginTop: 5,
     borderRadius: 10,
-    flexDirection: "row",
-    //flexWrap: 'wrap',
-    //alignItems: "center",
-    //justifyContent: "center",
+    flexDirection: "row"
   },
 });

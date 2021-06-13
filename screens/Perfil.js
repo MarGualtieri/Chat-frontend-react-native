@@ -16,7 +16,8 @@ import { globalStyles } from "../styles/global";
 export default function Perfil({ route, navigation }) {
   const { userId, token, usuario } = route.params;
 
-  useEffect(() => {}, [reviews]);
+  
+
 
   const [reviews, setReviews] = useState([
     {
@@ -32,12 +33,12 @@ export default function Perfil({ route, navigation }) {
     /*-----------------USUARIOS BACKEND---------------*/
   }
 
-  const [nombre, setNombre] = useState("");
-  const [edad, setEdad] = useState();
-  const [email, setEmail] = useState("");
-  const [idioma, setIdioma] = useState("");
+  const [nombre, setNombre] = useState(usuario.nombre);
+  const [edad, setEdad] = useState(usuario.edad);
+  const [email, setEmail] = useState(usuario.email);
+  const [idioma, setIdioma] = useState(usuario.idioma);
 
-  const USUARIOS = "https://apichathello.herokuapp.com/users/" + userId;
+  const USUARIOS = "https://apichathello.herokuapp.com/users/"+userId;
 
   function editarNombre() {
     fetch(USUARIOS, {
@@ -54,10 +55,14 @@ export default function Perfil({ route, navigation }) {
       }),
     })
       .then((res) => {
-        alert("se ha cambiado su nombre");
+        alert("Cambio Guardado");
+        //navigation.navigate("Perfil", { userId, token, usuario })
+        actualizar()
       })
       .catch((error) => alert(error.message));
+    
   }
+
 
   {
     /*-----------------app---------------*/
@@ -118,7 +123,7 @@ export default function Perfil({ route, navigation }) {
             />
             <View style={{ marginHorizontal: 60 }}>
               <Button
-                onPress={() => alert("Right button pressed")}
+                onPress={editarNombre}
                 title="EDITAR IDIOMA"
                 color="#841584"
               />
@@ -132,7 +137,7 @@ export default function Perfil({ route, navigation }) {
             />
             <View style={{ marginHorizontal: 60 }}>
               <Button
-                onPress={() => alert("Right button pressed")}
+               onPress={editarNombre}
                 title="EDITAR EDAD"
                 color="#841584"
               />
@@ -145,7 +150,7 @@ export default function Perfil({ route, navigation }) {
             />
             <View style={{ marginHorizontal: 60, marginBottom: 15 }}>
               <Button
-                onPress={() => alert("Right button pressed")}
+                onPress={editarNombre}
                 title="EDITAR EMAIL"
                 color="#841584"
               />
