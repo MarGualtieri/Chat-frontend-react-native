@@ -10,7 +10,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+
 import React, { useState, useEffect, useContext } from "react";
+
 import {
   aleman,
   espanol,
@@ -30,18 +32,17 @@ export default function Welcome({ route, navigation }) {
 
   const { authData } = useContext(GlobalContext);
 
-  
-
   const idiomas = [
-    { id: 1, name: "Ingles", idioma: ingles, check: false },
-    { id: 2, name: "Español", idioma: espanol, check: false },
-    { id: 3, name: "Frances", idioma: frances, check: false },
-    { id: 4, name: "Aleman", idioma: aleman, check: false },
-    { id: 5, name: "Holandes", idioma: holandes, check: false },
+    { id: 1, name: "English", idioma: ingles, check: false },
+    { id: 2, name: "Spanish", idioma: espanol, check: false },
+    { id: 3, name: "French", idioma: frances, check: false },
+    { id: 4, name: "German", idioma: aleman, check: false },
+    { id: 5, name: "Dutch", idioma: holandes, check: false },
   ];
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [text, onChangeOrigen] = React.useState("Seleccione un idioma");
+ 
 
   const [banderas, setBanderas] = useState(idiomas);
 
@@ -72,11 +73,12 @@ export default function Welcome({ route, navigation }) {
     const bandera = { ...idiomas[index - 1], check: true };
     setBanderas(idiomas.map((item) => (item.id === index ? bandera : item)));
   }
+  
   const [usuario, setUsuario] = useState({});
 
-  const USUARIOS = "https://apichathello.herokuapp.com/users/" + userId;
+  const userdb = "https://apichathello.herokuapp.com/users/" + userId;
 
-  useEffect(() => {
+ useEffect(() => {
     fetch(USUARIOS)
       .catch()
       .then((res) => {
@@ -86,6 +88,7 @@ export default function Welcome({ route, navigation }) {
         setUsuario(data);
       });
   }, [authData]);
+  
   authData.nombre = usuario.nombre;
   authData.idioma = usuario.idioma;
   authData.edad = usuario.edad;
@@ -139,6 +142,7 @@ export default function Welcome({ route, navigation }) {
               </TouchableOpacity>
               {/*-----------------titulo nombre usuario---------------*/}
               <TouchableOpacity
+
                 onPress={() => navigation.navigate("Perfil", { userId })}
                 style={{
                   justifyContent: "center",
@@ -158,7 +162,6 @@ export default function Welcome({ route, navigation }) {
             <View>
               <View style={{ flexDirection: "row", marginRight: 20 }}>
                 <Image source={logo} style={styles.logo} />
-
                 <TouchableOpacity onPress={openImagePicker}>
                   <Image
                     source={{
@@ -195,28 +198,35 @@ export default function Welcome({ route, navigation }) {
         {/*-----------------BANDERAS---------------*/}
         <SafeAreaView>
           <View style={{ flexDirection: "row", marginTop: 5 }}>
-            {banderas.map((idioma) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    asignarOrigen(idioma.id);
-                    checkFlag(idioma.id);
-                  }}
-                >
-                  <Image
-                    source={idioma.idioma}
-                    style={
-                      idioma.check ? styles.banderaChecked : styles.bandera
-                    }
-                  />
-                </TouchableOpacity>
-              );
-            })}
+            {
+              banderas.map((idioma) => {
+                return (
+                  <TouchableOpacity onPress={() => {
+                    asignarOrigen(idioma.id)
+                    checkFlag(idioma.id)
+                  }
+                  }>
+                    <Image
+                      source={idioma.idioma}
+                      style={idioma.check ? styles.banderaChecked : styles.bandera}
+                    />
+                  </TouchableOpacity>
+                )
+              })
+            }
           </View>
 
           <Text style={styles.input}>{text}</Text>
+          
+          <TouchableOpacity 
+            onPress={()=>{
+              navigation.navigate("Chat", {user: userId, languageRoom: text})
+              
+            }}
+          >
+            <Text style={styles.continuar}>Continuar</Text>
+          </TouchableOpacity>
 
-          <Text style={styles.continuar}>Continuar</Text>
         </SafeAreaView>
         <StatusBar style="light" />
       </View>
@@ -277,13 +287,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
     marginRight: 40,
-
     //resizeMode:"contain",
   },
 
   input: {
     // SELECCIONE UN IDIOMA
-
     margin: 20,
     borderRadius: 30,
     backgroundColor: "#cf5475",
@@ -330,7 +338,6 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginLeft: 5,
   },
-
   banderaIcon: {
     height: 25,
     width: 25,
@@ -393,9 +400,6 @@ const styles = StyleSheet.create({
     padding: 5,
     marginTop: 5,
     borderRadius: 10,
-    flexDirection: "row",
-    //flexWrap: 'wrap',
-    //alignItems: "center",
-    //justifyContent: "center",
+    flexDirection: "row"
   },
 });

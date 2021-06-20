@@ -1,6 +1,7 @@
 import "react-native-gesture-handler";
 
 import Amigos from "./screens/Amigos";
+import Chat from './screens/Chat'
 import Login from "./screens/Login";
 import { NavigationContainer } from "@react-navigation/native";
 import Perfil from "./screens/Perfil";

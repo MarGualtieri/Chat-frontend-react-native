@@ -1,12 +1,11 @@
 import React from "react";
-import ingles from "../assets/ingles.png";
+import aleman from "../assets/aleman.jpg";
 import espanol from "../assets/espanol.png";
 import frances from "../assets/frances.png";
-import aleman from "../assets/aleman.jpg";
 import holandes from "../assets/holandes.png";
+import ingles from "../assets/ingles.png";
 
-
-function banderas() {
+function Banderas() {
   const ingles = <Image source={ingles}  />;
   const espanol = <Image source={espanol}  />;
   const frances = <Image source={frances}  />;

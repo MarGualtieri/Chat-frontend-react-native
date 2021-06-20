@@ -1,14 +1,17 @@
 import {
-  StyleSheet,
-  TextInput,
-  View,
   Button,
+  FlatList,
   ScrollView,
+  StyleSheet,
   Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import React, { useState, useContext } from "react";
 import GlobalContext from "../components/global/context";
 import ListaPerfil from "../components/ListaPerfil";
+
 
 {
   /*-----------------INICIO DE LA APLICACION---------------*/
