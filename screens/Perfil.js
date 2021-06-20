@@ -8,37 +8,45 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState, useContext } from "react";
+import GlobalContext from "../components/global/context";
+import ListaPerfil from "../components/ListaPerfil";
 
-import Card from "../components/Card";
-import { globalStyles } from "../styles/global";
+
+{
+  /*-----------------INICIO DE LA APLICACION---------------*/
+}
 
 export default function Perfil({ route, navigation }) {
-  const { userId, token, usuario } = route.params;
+  const { userId } = route.params;
+  const {authData} = useContext(GlobalContext);
 
-  
+  const [nombre, setNombre] = useState(authData.nombre);
+  const [idioma, setIdioma] = useState(authData.idioma);
+  const [edad, setEdad] = useState(authData.edad);
 
-
-  const [reviews, setReviews] = useState([
-    {
-      Nombre: usuario.nombre,
-      Idioma: usuario.idioma,
-      Mail: usuario.email,
-      Edad: usuario.edad,
-      key: usuario.id,
-    },
-  ]);
+  const guardarCambios = () => {
+    authData.cambioPerfil(nombre, edad, idioma);
+    navigation.navigate("Welcome");
+  };
 
   {
     /*-----------------USUARIOS BACKEND---------------*/
   }
 
-  const [nombre, setNombre] = useState(usuario.nombre);
-  const [edad, setEdad] = useState(usuario.edad);
-  const [email, setEmail] = useState(usuario.email);
-  const [idioma, setIdioma] = useState(usuario.idioma);
+  const textHandlerNombre = (event) => {
+    setNombre(event.target.value);
+  };
+  const textHandlerIdioma = (event) => {
+    setIdioma(event.target.value);
+  };
+  const textHandlerEdad = (event) => {
+    setEdad(event.target.value);
+  };
 
-  const USUARIOS = "https://apichathello.herokuapp.com/users/"+userId;
+  const USUARIOS = "https://apichathello.herokuapp.com/users/" + userId;
+
+  //const USUARIOS = "http://localhost:3000/users/"+userId;
 
   function editarNombre() {
     fetch(USUARIOS, {
@@ -51,18 +59,14 @@ export default function Perfil({ route, navigation }) {
         nombre: nombre,
         idioma: idioma,
         edad: edad,
-        email: email
       }),
     })
       .then((res) => {
-        alert("Cambio Guardado");
-        //navigation.navigate("Perfil", { userId, token, usuario })
-        actualizar()
+        alert("cambio realizado con exito");
+        guardarCambios();
       })
       .catch((error) => alert(error.message));
-    
   }
-
 
   {
     /*-----------------app---------------*/
@@ -73,87 +77,48 @@ export default function Perfil({ route, navigation }) {
       <View style={styles.container}>
         <View style={styles.fondo}>
           <View>
-            <FlatList
-              data={reviews}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("ReviewDetails", item)}
-                >
-                  <Card>
-                    <Text style={globalStyles.titleText}>
-                      NOMBRE: {item.Nombre}
-                    </Text>
-                    <Text style={globalStyles.titleText}>
-                      IDIOMA: {item.Idioma}
-                    </Text>
-                    <Text style={globalStyles.titleText}>
-                      EDAD: {item.Edad}
-                    </Text>
-                    <Text style={globalStyles.titleText}>
-                      EMAIL: {item.Mail}
-                    </Text>
-                  </Card>
-                </TouchableOpacity>
-              )}
+            <Text style={styles.title}>BIENVENIDO A SU PERFIL</Text>
+            <ListaPerfil
+              textNombre={nombre}
+              textIdioma={idioma}
+              textEdad={edad}
             />
           </View>
 
           {/*-----------------TEST USUARIOS---------------*/}
-          <View>
-            <TextInput
-              style={styles.input}
-              onChangeText={(text) => setNombre(text)}
-              value={nombre}
-              placeholder=" edite su nombre"
-            />
+          <View style={styles.flatContainer}>
+            <View style={styles.container2}>
+              <View style={styles.fondo2}>
+                <Text style={styles.title}>AQUI PUEDE MODIFICAR SUS DATOS</Text>
+              </View>
+              <TextInput
+                style={styles.flat}
+                onChangeText={(text) => setNombre(text)}
+                onChange={textHandlerNombre}
+                placeholder=" edite su nombre"
+              />
 
-            <View style={{ marginHorizontal: 60 }}>
-              <Button
-                onPress={editarNombre}
-                title="EDITAR NOMBRE"
-                color="#841584"
+              <TextInput
+                style={styles.flat}
+                onChangeText={(text) => setIdioma(text)}
+                onChange={textHandlerIdioma}
+                placeholder=" edite su idioma"
               />
-            </View>
 
-            <TextInput
-              style={styles.input}
-              onChangeText={(text) => setIdioma(text)}
-              value={idioma}
-              placeholder=" edite su idioma"
-            />
-            <View style={{ marginHorizontal: 60 }}>
-              <Button
-                onPress={editarNombre}
-                title="EDITAR IDIOMA"
-                color="#841584"
+              <TextInput
+                style={styles.flat}
+                onChangeText={(text) => setEdad(text)}
+                onChange={textHandlerEdad}  
+                placeholder=" edite su edad"
+                keyboardType="numeric"
               />
-            </View>
-            <TextInput
-              style={styles.input}
-              onChangeText={(text) => setEdad(text)}
-              value={edad}
-              placeholder=" edite su edad"
-              keyboardType="numeric"
-            />
-            <View style={{ marginHorizontal: 60 }}>
-              <Button
-               onPress={editarNombre}
-                title="EDITAR EDAD"
-                color="#841584"
-              />
-            </View>
-            <TextInput
-              style={styles.input}
-              onChangeText={(text) => setEmail(text)}
-              value={email}
-              placeholder=" edite su email"
-            />
-            <View style={{ marginHorizontal: 60, marginBottom: 15 }}>
-              <Button
-                onPress={editarNombre}
-                title="EDITAR EMAIL"
-                color="#841584"
-              />
+              <View style={{ marginHorizontal: 60, marginVertical: 20 }}>
+                <Button
+                  onPress={editarNombre}
+                  title="GUARDAR CAMBIOS"
+                  color="#841584"
+                />
+              </View>
             </View>
           </View>
 
@@ -169,58 +134,113 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "coral",
   },
 
-  modalContent: {
-    flex: 0.62, // en 1 toma toda la pantalla esto controla el alto del modal
-    marginTop: "auto", // usando valores empieza a recortar el modal desde abajo
-    backgroundColor: "white",
-    marginHorizontal: 20,
-    //width:'50%' recorta tambien
-  },
-  modalToggle: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 200,
-    borderWidth: 2,
-    borderColor: "coral",
-    padding: 10,
-    borderRadius: 10,
-    alignSelf: "center",
-  },
-  modalClose: {
-    marginTop: 20,
-    marginBottom: 0,
-    borderWidth: 2,
-    borderColor: "coral",
-    padding: 10,
-    borderRadius: 10,
-    alignSelf: "center",
-  },
-  formik: {
-    marginTop: 20,
-    marginBottom: 0,
-    borderWidth: 2,
-    borderColor: "coral",
-    padding: 10,
-    borderRadius: 10,
-    alignSelf: "center",
-  },
   fondo: {
     width: "100%",
     height: "100%",
     backgroundColor: "#fff0f0",
-    borderColor: "black",
-    borderWidth: 1,
-    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+
+    elevation: 8,
   },
   tex: {
     fontSize: 20,
     marginVertical: 20,
   },
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
+  flat: {
+    flex: 1,
+    width: "85%",
+    marginVertical: 10,
+    fontSize: 16,
+    color: "black",
+    fontWeight: "bold",
+    backgroundColor: "white",
+    alignItems: "center",
+    padding: 5,
+    marginTop: 5,
+    borderRadius: 10,
+    flexDirection: "row",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+
+    elevation: 8,
+  },
+
+  container2: {
+    width: "100%",
+    backgroundColor: "pink",
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+    marginVertical: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+
+    elevation: 8,
+  },
+
+  flatContainer: {
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: "coral",
+    flex: 1,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+
+    elevation: 8,
+  },
+  title: {
+    fontSize: 16,
+    color: "black",
+    fontWeight: "bold",
+    alignItems: "center",
+    textAlign: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+
+    elevation: 8,
+  },
+  fondo2: {
+    backgroundColor: "#fff0f0",
+    flex: 1,
+    width: "100%",
+    marginBottom: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+
+    elevation: 8,
   },
 });
