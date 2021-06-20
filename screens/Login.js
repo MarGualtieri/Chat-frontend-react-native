@@ -1,14 +1,12 @@
 import * as yup from 'yup';
-
 import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Fontisto, Ionicons, Octicons } from "@expo/vector-icons";
-import React, { useState } from "react";
-
+import React, { useState,useContext } from "react";
 import Constants from 'expo-constants';
 import { Formik } from "formik";
-import { ResponsiveEmbed } from 'react-bootstrap';
 import { StatusBar } from "expo-status-bar";
 import logo from "../assets/logo.png";
+import GlobalContext from "../components/global/context";
 
 const URL_API = "https://apichathello.herokuapp.com/login";
 
@@ -23,6 +21,10 @@ const reviewSchema = yup.object({
 })
 
 const Login = ({ navigation }) => {
+
+  const {setAuthenticated} = useContext(GlobalContext)
+
+  
   const [hidePassword, setHidePassword] = useState(true);
   const [loading, setLoading] = useState(false);
 
@@ -52,10 +54,11 @@ const Login = ({ navigation }) => {
                 }
               })
               if (response.ok) {
-
+                //setAuthenticated(true)
                 const res = await response.json()
-
+               
                 navigation.navigate("Welcome", { userId: res.user._id, token: res.token })
+                
               } else {
                 alert("Invalid e-mail or password")
               }
