@@ -10,9 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-
-import React, { useState, useEffect, useContext } from "react";
-
+import React, { useContext, useEffect, useState } from "react";
 import {
   aleman,
   espanol,
@@ -21,13 +19,15 @@ import {
   ingles,
 } from "../components/Banderas";
 
+import GlobalContext from "../components/global/context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import logo from "../assets/logo.png";
-import GlobalContext from "../components/global/context";
 
 //-----------------------------------FUNCIONES Y STATES--------------------------
 export default function Welcome({ route, navigation }) {
+  console.log(route)
+
   const { userId, token } = route.params;
 
   const { authData } = useContext(GlobalContext);
@@ -79,7 +79,7 @@ export default function Welcome({ route, navigation }) {
   const userdb = "https://apichathello.herokuapp.com/users/" + userId;
 
  useEffect(() => {
-    fetch(USUARIOS)
+    fetch(userdb)
       .catch()
       .then((res) => {
         return res.json();
@@ -152,7 +152,7 @@ export default function Welcome({ route, navigation }) {
               >
                 <Image source={espanol} style={styles.banderaIcon} />
                 <Text style={{ color: "white", fontWeight: "bold" }}>
-                  Lionel Messi
+                  {authData.nombre}
                 </Text>
               </TouchableOpacity>
 
@@ -219,10 +219,10 @@ export default function Welcome({ route, navigation }) {
           <Text style={styles.input}>{text}</Text>
           
           <TouchableOpacity 
-            onPress={()=>{
-              navigation.navigate("Chat", {user: userId, languageRoom: text})
+            onPress={()=>
+              navigation.navigate("Chat", {user: authData.nombre, languageRoom: text})
               
-            }}
+            }
           >
             <Text style={styles.continuar}>Continuar</Text>
           </TouchableOpacity>

@@ -44,12 +44,10 @@ export default function Perfil({ route, navigation }) {
     setEdad(event.target.value);
   };
 
-  const USUARIOS = "https://apichathello.herokuapp.com/users/" + userId;
-
-  //const USUARIOS = "http://localhost:3000/users/"+userId;
+  const userdb = "https://apichathello.herokuapp.com/users/" + userId;
 
   function editarNombre() {
-    fetch(USUARIOS, {
+    fetch(userdb, {
       method: "PUT",
       headers: {
         Accept: "application/json",
