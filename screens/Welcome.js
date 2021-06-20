@@ -11,7 +11,7 @@ import {
   View,
 } from "react-native";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import {
   aleman,
@@ -24,9 +24,13 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import logo from "../assets/logo.png";
+import GlobalContext from "../components/global/context";
 
 //-----------------------------------FUNCIONES Y STATES--------------------------
 export default function Welcome({ route, navigation }) {
+  const { userId, token } = route.params;
+
+  const { authData } = useContext(GlobalContext);
 
   const idiomas = [
     { id: 1, name: "English", idioma: ingles, check: false },
@@ -35,8 +39,6 @@ export default function Welcome({ route, navigation }) {
     { id: 4, name: "German", idioma: aleman, check: false },
     { id: 5, name: "Dutch", idioma: holandes, check: false },
   ];
-
-  const { userId, token } = route.params
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [text, onChangeOrigen] = React.useState("Seleccione un idioma");
@@ -76,20 +78,20 @@ export default function Welcome({ route, navigation }) {
 
   const userdb = "https://apichathello.herokuapp.com/users/" + userId;
 
-  useEffect(() => {
-    fetch(userdb)
+ useEffect(() => {
+    fetch(USUARIOS)
       .catch()
       .then((res) => {
-       
         return res.json();
       })
       .then((data) => {
-      
         setUsuario(data);
       });
-  }, []);
-
-
+  }, [authData]);
+  
+  authData.nombre = usuario.nombre;
+  authData.idioma = usuario.idioma;
+  authData.edad = usuario.edad;
   //----------------------------------APP--------------------------------------
 
   return (
@@ -140,7 +142,8 @@ export default function Welcome({ route, navigation }) {
               </TouchableOpacity>
               {/*-----------------titulo nombre usuario---------------*/}
               <TouchableOpacity
-                onPress={() => navigation.navigate("Perfil", { userId, token, usuario })}
+
+                onPress={() => navigation.navigate("Perfil", { userId })}
                 style={{
                   justifyContent: "center",
                   alignItems: "center",
@@ -189,7 +192,9 @@ export default function Welcome({ route, navigation }) {
         <Text style={{ fontSize: 20, color: "black", fontWeight: "bold" }}>
           una conversacion en
         </Text>
-
+        <Text>nombre: {authData.nombre}</Text>
+        <Text>edad: {authData.edad}</Text>
+        <Text>idioma: {authData.idioma}</Text>
         {/*-----------------BANDERAS---------------*/}
         <SafeAreaView>
           <View style={{ flexDirection: "row", marginTop: 5 }}>
