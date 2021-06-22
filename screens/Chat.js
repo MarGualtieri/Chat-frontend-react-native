@@ -1,14 +1,15 @@
-import { FlatList, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { FlatList, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import React, { Component, useEffect, useState } from "react";
 
 import Room from "../components/Room";
 import { TouchableOpacity } from "react-native";
 
-const Item = ({ title }) => (
-    <View style={styles.item}>
+const Item = ({ title, user }) => (
+    <View style={user ? styles.myMessage : styles.receiverMessage}>
         <Text style={styles.title}>{title}</Text>
     </View>
 );
+
 
 export default function Chat({ route, navigation }) {
     const { languageRoom } = route.params;
@@ -17,39 +18,30 @@ export default function Chat({ route, navigation }) {
 
     const handleNewMessageChange = (event) => {
         setNewMessage(event.target.value);
-      };
-    
-      const handleSendMessage = () => {
+    };
+
+    const handleSendMessage = () => {
         sendMessage(newMessage);
         setNewMessage("");
-      };
+    };
 
-  
+
     const renderItem = ({ item }) => (
-        <Item style={item.ownedByCurrentUser ? styles.myMessage : styles.receiverMessage}>
-            {item.body}
-            {item.senderId}
-        </Item>
+        <Item title={item.body} user={item.ownedByCurrentUser} />
     );
 
     return (
         <View style={styles.window}>
             <View style={styles.titleContainer} >
-                <Text style={styles.title} > {languageRoom} Room  </Text>
+                <Text style={styles.titleRoom} > {languageRoom} Room  </Text>
             </View>
             <View style={styles.windowChat}>
                 <ScrollView style={styles.messages}>
-                    {/* 
                     <FlatList
                         data={messages}
                         renderItem={renderItem}
-                        keyExtractor={item => item.id}
-                    /> */}
-                    {messages.map((message, i) => (
-                    <Text key={i} style={ message.ownedByCurrentUser ? styles.myMessage : styles.receiverMessage } >
-                      {message.body}
-                    </Text>
-                  ))}
+                        keyExtractor={item => item.senderId}
+                    />
                 </ScrollView>
                 <View style={styles.windowInput}>
                     <TextInput
@@ -74,7 +66,7 @@ export default function Chat({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-    title: {
+    titleRoom: {
         marginRight: 0,
         marginLeft: 0,
         color: "black",
@@ -88,6 +80,9 @@ const styles = StyleSheet.create({
         paddingLeft: 0,
         paddingRight: 0,
         flex: 1
+    },
+    title: {
+        fontSize: 32,
     },
     textInput: {
         backgroundColor: "white",
@@ -114,7 +109,7 @@ const styles = StyleSheet.create({
         alignContent: "flex-end"
     },
     buttonSend: {
-        backgroundColor: "darkturquoise",
+        backgroundColor: '#cf5475',
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 2,
@@ -153,18 +148,24 @@ const styles = StyleSheet.create({
     myMessage: {
         marginLeft: 0,
         backgroundColor: "darkturquoise",
-        
+        padding: 20,
+        marginVertical: 8,
+        marginHorizontal: 16,
+
     },
     receiverMessage: {
         marginRight: 0,
-        backgroundColor: "lavender"
+        backgroundColor: "lavender",
+        padding: 20,
+        marginVertical: 8,
+        marginHorizontal: 16,
     },
     item: {
-        marginBottom: 5,
-        padding: 3,
-        borderRadius: 4,
-        color: "white"
-    },
+        backgroundColor: '#f9c2ff',
+        padding: 20,
+        marginVertical: 8,
+        marginHorizontal: 16,
+      },
     windowChat: {
         flexDirection: "column",
         height: 500,

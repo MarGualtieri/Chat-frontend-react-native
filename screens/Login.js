@@ -222,7 +222,7 @@ const MyTextInput = ({
 export default Login;
 
 
-//--------------------ESTILOS-----------------------
+//--------------------Styles-----------------------
 const StatusBarHeight = Constants.statusBarHeight;
 
 export const Colors = {
