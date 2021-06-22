@@ -1,13 +1,18 @@
 import * as yup from 'yup';
 
 import { Ionicons, Octicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
+import AsyncStorage from "../utils/AsyncStorage";
 import Constants from 'expo-constants';
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Formik } from "formik";
+import GlobalContext from "../components/global/context/index";
 import { StatusBar } from "expo-status-bar";
+
+//const URL_API = "http://localhost:3000/signup";
+const URL_API = "https://apichathello.herokuapp.com/signup";
 
 const reviewSchema = yup.object({
   fullName: yup
@@ -39,6 +44,8 @@ const Signup = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date(2021, 0, 1));
+  const { setAuthData, setAuthenticated } = useContext(GlobalContext)
+
 
   // Fecha elegida por el usuario
   const [dob, setDob] = useState();
@@ -58,12 +65,6 @@ const Signup = ({ navigation }) => {
       <View style={styles.container}>
         <StatusBar style="light" />
         <View style={styles.innerContainer}>
-          <View style={styles.extraView}>
-            <Text style={styles.extraText}>IR A PERFIL DE USUARIO </Text>
-            <TouchableOpacity style={styles.textLink} onPress={() => navigation.navigate("Welcome")}>
-              <Text style={styles.textLinkContent}> WELCOME</Text>
-            </TouchableOpacity>
-          </View>
 
           {show && (
             <DateTimePicker
@@ -85,10 +86,37 @@ const Signup = ({ navigation }) => {
               confirmPassword: "",
             }}
             validationSchema={reviewSchema}
-            onSubmit={(values, actions) => {
-              addReview(values)
-              actions.resetForm()
-            }}
+            onSubmit={async (values, actions) => {
+              const response = await fetch(URL_API, {
+                method: 'POST',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  name: values.fullName,
+                  email: values.email,
+                  password: values.password,
+                  language: "English",
+                  age: 25
+                })
+              }).catch(err => {
+                if (err & err.message) {
+                  console.log(err.message)
+                }
+              })
+              if (response.ok) {
+                const res = await response.json()
+                await AsyncStorage.storeData('@userData', res.user)
+                setAuthData(res)
+                setAuthenticated(true);
+                alert("Welcome to Hello!")
+              } else {
+                alert("Email is being used.")
+              }
+              actions.resetForm();
+            }
+            }
           >
             {(props) => (
               <View style={styles.styleFormArea}>
@@ -114,6 +142,7 @@ const Signup = ({ navigation }) => {
                   keyboardType="email-address"
                 />
                 <Text style={styles.messageBoxRed}> {props.touched.email && props.errors.email}</Text>
+
 
                 <MyTextInput
                   label="Date of Birth"
@@ -160,7 +189,7 @@ const Signup = ({ navigation }) => {
                 <Text style={styles.messageBoxRed}> {props.touched.confirmPassword && props.errors.confirmPassword}</Text>
 
                 <TouchableOpacity style={styles.styledButton} onPress={props.handleSubmit}>
-                  <Text style={styles.buttonText}>Login</Text>
+                  <Text style={styles.buttonText}>Create account</Text>
                 </TouchableOpacity>
 
                 <View style={styles.line} />

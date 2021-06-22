@@ -17,22 +17,38 @@ import {
   frances,
   holandes,
   ingles,
-} from "../components/Banderas";
+} from "../components/Flags";
 
-import GlobalContext from "../components/global/context";
+import AsyncStorage from "../utils/AsyncStorage";
+import GlobalContext from "../components/global/context/index";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import logo from "../assets/logo.png";
 
-//-----------------------------------FUNCIONES Y STATES--------------------------
-export default function Welcome({ route, navigation }) {
-  console.log(route)
+//-----------------------------------Functions and States--------------------------
+export default function Welcome({ navigation }) {
 
-  const { userId, token } = route.params;
+  const { authData, setAuthData, applyLogout } = useContext(GlobalContext);
 
-  const { authData } = useContext(GlobalContext);
+  //const [currentUser, setCurrentUser] = useState({});
+  
 
-  const idiomas = [
+  const bringUser = async () => {
+    const storedUser = await AsyncStorage.getData('@userData');
+    if (storedUser) {
+      setAuthData(storedUser)
+    }
+
+  }
+
+  useEffect(() => {
+    
+    bringUser()
+
+  },[]);
+
+
+  const languages = [
     { id: 1, name: "English", idioma: ingles, check: false },
     { id: 2, name: "Spanish", idioma: espanol, check: false },
     { id: 3, name: "French", idioma: frances, check: false },
@@ -41,10 +57,10 @@ export default function Welcome({ route, navigation }) {
   ];
 
   const [selectedImage, setSelectedImage] = useState(null);
-  const [text, onChangeOrigen] = React.useState("Seleccione un idioma");
- 
+  const [text, onChangeOrigen] = React.useState("Choose a language");
 
-  const [banderas, setBanderas] = useState(idiomas);
+
+  const [banderas, setBanderas] = useState(languages);
 
   let openImagePicker = async () => {
     let permissionResult = ImagePicker.requestMediaLibraryPermissionsAsync;
@@ -62,36 +78,18 @@ export default function Welcome({ route, navigation }) {
   };
 
   {
-    /*-----------------RESALTADOR DE BANDERA---------------*/
+    /*-----------------Flag Highlight---------------*/
   }
 
   function asignarOrigen(props) {
-    onChangeOrigen(idiomas[props - 1].name);
+    onChangeOrigen(languages[props - 1].name);
   }
 
   function checkFlag(index) {
-    const bandera = { ...idiomas[index - 1], check: true };
-    setBanderas(idiomas.map((item) => (item.id === index ? bandera : item)));
+    const bandera = { ...languages[index - 1], check: true };
+    setBanderas(languages.map((item) => (item.id === index ? bandera : item)));
   }
-  
-  const [usuario, setUsuario] = useState({});
 
-  const userdb = "https://apichathello.herokuapp.com/users/" + userId;
-
- useEffect(() => {
-    fetch(userdb)
-      .catch()
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        setUsuario(data);
-      });
-  }, [authData]);
-  
-  authData.nombre = usuario.nombre;
-  authData.idioma = usuario.idioma;
-  authData.edad = usuario.edad;
   //----------------------------------APP--------------------------------------
 
   return (
@@ -114,7 +112,7 @@ export default function Welcome({ route, navigation }) {
             >
               {/*-----------------titulo boton amigos---------------*/}
               <TouchableOpacity
-                onPress={() => navigation.navigate("Amigos")}
+                onPress={() => navigation.navigate("Friends")}
                 style={{
                   justifyContent: "center",
                   alignItems: "center",
@@ -137,13 +135,13 @@ export default function Welcome({ route, navigation }) {
                     fontSize: 15,
                   }}
                 >
-                  Amigos: 12
+                  Friends: 12
                 </Text>
               </TouchableOpacity>
               {/*-----------------titulo nombre usuario---------------*/}
               <TouchableOpacity
 
-                onPress={() => navigation.navigate("Perfil", { userId })}
+                onPress={() => navigation.navigate("Profile")}
                 style={{
                   justifyContent: "center",
                   alignItems: "center",
@@ -152,7 +150,7 @@ export default function Welcome({ route, navigation }) {
               >
                 <Image source={espanol} style={styles.banderaIcon} />
                 <Text style={{ color: "white", fontWeight: "bold" }}>
-                  {authData.nombre}
+                  {authData.name}
                 </Text>
               </TouchableOpacity>
 
@@ -187,14 +185,11 @@ export default function Welcome({ route, navigation }) {
             marginTop: 50,
           }}
         >
-          Elige un idioma para iniciar
+          Choose a language to start
         </Text>
         <Text style={{ fontSize: 20, color: "black", fontWeight: "bold" }}>
-          una conversacion en
+          a conversation
         </Text>
-        <Text>nombre: {authData.nombre}</Text>
-        <Text>edad: {authData.edad}</Text>
-        <Text>idioma: {authData.idioma}</Text>
         {/*-----------------BANDERAS---------------*/}
         <SafeAreaView>
           <View style={{ flexDirection: "row", marginTop: 5 }}>
@@ -217,14 +212,23 @@ export default function Welcome({ route, navigation }) {
           </View>
 
           <Text style={styles.input}>{text}</Text>
-          
-          <TouchableOpacity 
-            onPress={()=>
-              navigation.navigate("Chat", {user: authData.nombre, languageRoom: text})
-              
-            }
+
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Chat", { languageRoom: text })
+
+            }}
           >
-            <Text style={styles.continuar}>Continuar</Text>
+            <Text style={styles.continuar}>Chat</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              applyLogout()
+
+            }}
+          >
+            <Text style={styles.continuar}>Logout</Text>
           </TouchableOpacity>
 
         </SafeAreaView>

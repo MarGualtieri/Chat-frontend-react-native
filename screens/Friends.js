@@ -15,7 +15,7 @@ const corazones = [
   },
 ];
 
-const amigos = [
+const friends = [
   {
     Nombre: "Pedro Sanchez ",
     Idioma: "Español",
@@ -39,9 +39,9 @@ const amigos = [
   },
 ]
 
-export default function Amigos({ navigation }) {
+export default function Friends({ navigation }) {
 
-  const [reviews, setReviews] = useState(amigos);
+  const [reviews, setReviews] = useState(friends);
 
   return (
     <View style={globalStyles.container}>

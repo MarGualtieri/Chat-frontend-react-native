@@ -5,7 +5,7 @@ import frances from "../assets/frances.png";
 import holandes from "../assets/holandes.png";
 import ingles from "../assets/ingles.png";
 
-function Banderas() {
+function Flags() {
   const ingles = <Image source={ingles}  />;
   const espanol = <Image source={espanol}  />;
   const frances = <Image source={frances}  />;

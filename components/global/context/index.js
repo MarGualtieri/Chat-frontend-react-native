@@ -1,12 +1,13 @@
 import React from 'react';
 
 const authData ={
-    nombre: 'Mariano',
-    idioma: 'España',
-    edad: 25,
-  
-    cambioPerfil: (nombre,edad,idioma) =>{
-    setAuthData({nombre,edad,idioma})
+    _id: '',
+    name: '',
+    language: '',
+    age: 2,
+    token: '',
+    changeProfile: (name, age, language) =>{
+    setAuthData({name, age, language})
   }
 }
 

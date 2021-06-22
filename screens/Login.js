@@ -1,14 +1,21 @@
+import * as Google from "expo-google-app-auth";
 import * as yup from 'yup';
+
 import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Fontisto, Ionicons, Octicons } from "@expo/vector-icons";
-import React, { useState,useContext } from "react";
+import React, { useContext, useState } from "react";
+
+import AsyncStorage from "../utils/AsyncStorage";
 import Constants from 'expo-constants';
 import { Formik } from "formik";
+import GlobalContext from "../components/global/context/index";
 import { StatusBar } from "expo-status-bar";
 import logo from "../assets/logo.png";
-import GlobalContext from "../components/global/context";
 
-const URL_API = "https://apichathello.herokuapp.com/login";
+const URL_API = "http://apichathello.herokuapp.com/login";
+//const URL_APIGOOGLE = "";
+const ANDROID = `505663916153-e72rc2raa3b8dmjb34ggbsl62r3rhkiu.apps.googleusercontent.com`
+const IOS = `[505663916153-nngtmvufna0jp4m5enatmpft0o7imb5l.apps.googleusercontent.com](http://505663916153-nngtmvufna0jp4m5enatmpft0o7imb5l.apps.googleusercontent.com/)`
 
 const reviewSchema = yup.object({
   email: yup
@@ -20,13 +27,45 @@ const reviewSchema = yup.object({
     .required('A password is required')
 })
 
-const Login = ({ navigation }) => {
 
-  const {setAuthenticated} = useContext(GlobalContext)
 
-  
+const Login = ({navigation}) => {
+
+  const { setAuthData, setAuthenticated, applyAuthentication } = useContext(GlobalContext)
+
   const [hidePassword, setHidePassword] = useState(true);
   const [loading, setLoading] = useState(false);
+
+  function onSignIn(googleUser) {
+    const id_token = googleUser.getAuthResponse().id_token;
+
+  }
+
+  const signInAsync = async () => {
+    console.log("Login");
+    try {
+
+      const config = {
+        iosClientId: IOS,
+        androidClientId: ANDROID
+      }
+
+      const { type, user } = await Google.logInAsync(config);
+
+      if (type === "success") {
+        // Then you can use the Google REST API
+        applyAuthentication(user)
+        console.log("Login success, navigating to Welcome");
+
+        const token = onSignIn(user);
+
+        navigation.navigate("Welcome", { userId: res.user._id, token: res.token })
+
+      }
+    } catch (error) {
+      console.log("LoginScreen.js 19 | error with login", error);
+    }
+  };
 
   return (
     <ScrollView style={{ width: "100%" }}>
@@ -54,11 +93,9 @@ const Login = ({ navigation }) => {
                 }
               })
               if (response.ok) {
-                //setAuthenticated(true)
                 const res = await response.json()
-               
-                navigation.navigate("Welcome", { userId: res.user._id, token: res.token })
-                
+                setAuthenticated(true);
+                await AsyncStorage.storeData('@userData', res.user)
               } else {
                 alert("Invalid e-mail or password")
               }
@@ -122,7 +159,7 @@ const Login = ({ navigation }) => {
 
                 <View style={styles.line} />
 
-                <TouchableOpacity style={styles.styledButtonGoogle} onPress={props.handleSubmit}>
+                <TouchableOpacity style={styles.styledButtonGoogle} onPress={signInAsync}>
                   <Fontisto name="google" color={primary} size={25} />
                   <Text style={styles.buttonTextGoogle}>Sign in with Google</Text>
                 </TouchableOpacity>

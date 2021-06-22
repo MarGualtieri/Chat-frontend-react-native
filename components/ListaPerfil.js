@@ -1,13 +1,14 @@
+import { StyleSheet, Text, View } from "react-native";
+
 import React from "react";
-import { Text, View, StyleSheet } from "react-native";
 
 const ListaPerfil = (props) => {
   return (
     <View style={styles.flatContainer}>
       <View style={styles.container}>
-        <Text style={styles.flat}>NOMBRE: {props.textNombre}</Text>
-        <Text style={styles.flat}>IDIOMA: {props.textIdioma}</Text>
-        <Text style={styles.flat}>EDAD: {props.textEdad}</Text>
+        <Text style={styles.flat}>Name: {props.textNombre}</Text>
+        <Text style={styles.flat}>Language: {props.textIdioma}</Text>
+        <Text style={styles.flat}>Age: {props.textEdad}</Text>
       </View>
     </View>
   );

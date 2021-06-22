@@ -1,67 +1,72 @@
 import {
   Button,
-  FlatList,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
+
+import AsyncStorage from "../utils/AsyncStorage";
 import GlobalContext from "../components/global/context";
 import ListaPerfil from "../components/ListaPerfil";
-
 
 {
   /*-----------------INICIO DE LA APLICACION---------------*/
 }
 
-export default function Perfil({ route, navigation }) {
-  const { userId } = route.params;
-  const {authData} = useContext(GlobalContext);
+export default function Profile({ navigation }) {
+  const { authData, setAuthData } = useContext(GlobalContext);
 
-  const [nombre, setNombre] = useState(authData.nombre);
-  const [idioma, setIdioma] = useState(authData.idioma);
-  const [edad, setEdad] = useState(authData.edad);
+  const [nameUser, setNameUser] = useState('');
+  const [languageUser, setLanguageUser] = useState('');
+  const [ageUser, setAgeUser] = useState('');
+  const [currentUser, setCurrentUser] = useState({});
 
-  const guardarCambios = () => {
-    authData.cambioPerfil(nombre, edad, idioma);
+  const saveChanges = () => {
+    const userUpdated = { ...currentUser, name: nameUser, age: ageUser, language: languageUser };
+    AsyncStorage.storeData("@userData", userUpdated)
+    setAuthData(userUpdated)
     navigation.navigate("Welcome");
   };
 
   {
-    /*-----------------USUARIOS BACKEND---------------*/
+    /*-----------------USER BACKEND---------------*/
   }
 
-  const textHandlerNombre = (event) => {
-    setNombre(event.target.value);
+  const textHandlerName = (event) => {
+    setNameUser(event.target.value);
   };
-  const textHandlerIdioma = (event) => {
-    setIdioma(event.target.value);
+  const textHandlerLanguage = (event) => {
+    setLanguageUser(event.target.value);
+
   };
-  const textHandlerEdad = (event) => {
-    setEdad(event.target.value);
+  const textHandlerAge = (event) => {
+    setAgeUser(event.target.value);
   };
 
-  const userdb = "https://apichathello.herokuapp.com/users/" + userId;
+  //const userdb = "http://localhost:3000/users/" + authData._id
+  const userdb = "https://apichathello.herokuapp.com/users/" + authData._id;
 
-  function editarNombre() {
+  function editUser() {
     fetch(userdb, {
       method: "PUT",
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        'Accept': 'application/json',
+        //'Authorization': `Bearer  `,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        nombre: nombre,
-        idioma: idioma,
-        edad: edad,
+        name: nameUser,
+        language: languageUser,
+        age: ageUser,
       }),
     })
       .then((res) => {
-        alert("cambio realizado con exito");
-        guardarCambios();
+        alert("Change was successful");
+        console.log(nameUser, languageUser, ageUser)
+        saveChanges();
       })
       .catch((error) => alert(error.message));
   }
@@ -70,16 +75,29 @@ export default function Perfil({ route, navigation }) {
     /*-----------------app---------------*/
   }
 
+
+  async function bringUserData() {
+    const user = await AsyncStorage.getData('@userData');
+    if (user) {
+      setCurrentUser(user)
+    }
+  }
+
+  useEffect(() => {
+    bringUserData()
+
+  }, [])
+
   return (
     <ScrollView style={{ width: "100%" }}>
       <View style={styles.container}>
         <View style={styles.fondo}>
           <View>
-            <Text style={styles.title}>BIENVENIDO A SU PERFIL</Text>
+            <Text style={styles.title}>Your profile</Text>
             <ListaPerfil
-              textNombre={nombre}
-              textIdioma={idioma}
-              textEdad={edad}
+              textNombre={authData.name}
+              textIdioma={authData.language}
+              textEdad={authData.age}
             />
           </View>
 
@@ -87,33 +105,33 @@ export default function Perfil({ route, navigation }) {
           <View style={styles.flatContainer}>
             <View style={styles.container2}>
               <View style={styles.fondo2}>
-                <Text style={styles.title}>AQUI PUEDE MODIFICAR SUS DATOS</Text>
+                <Text style={styles.title}>Modify your personal data</Text>
               </View>
               <TextInput
                 style={styles.flat}
-                onChangeText={(text) => setNombre(text)}
-                onChange={textHandlerNombre}
-                placeholder=" edite su nombre"
+                onChangeText={(text) => setNameUser(text)}
+                onChange={textHandlerName}
+                placeholder="Edit your name"
               />
 
               <TextInput
                 style={styles.flat}
-                onChangeText={(text) => setIdioma(text)}
-                onChange={textHandlerIdioma}
-                placeholder=" edite su idioma"
+                onChangeText={(text) => setLanguageUser(text)}
+                onChange={textHandlerLanguage}
+                placeholder="Edit your language"
               />
 
               <TextInput
                 style={styles.flat}
-                onChangeText={(text) => setEdad(text)}
-                onChange={textHandlerEdad}  
-                placeholder=" edite su edad"
+                onChangeText={(text) => setAgeUser(text)}
+                //onChange={textHandlerAge}
+                placeholder="Edit your age"
                 keyboardType="numeric"
               />
               <View style={{ marginHorizontal: 60, marginVertical: 20 }}>
                 <Button
-                  onPress={editarNombre}
-                  title="GUARDAR CAMBIOS"
+                  onPress={editUser}
+                  title={"Save Changes"}
                   color="#841584"
                 />
               </View>

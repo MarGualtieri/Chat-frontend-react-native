@@ -11,7 +11,7 @@ const Item = ({ title }) => (
 );
 
 export default function Chat({ route, navigation }) {
-    const { user, languageRoom } = route.params;
+    const { languageRoom } = route.params;
     const { messages, sendMessage } = Room(languageRoom);
     const [newMessage, setNewMessage] = useState('');
 
