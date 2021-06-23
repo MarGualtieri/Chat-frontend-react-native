@@ -8,7 +8,7 @@ export default function Room(languageRoom) {
     const [messages, setMessages] = useState([]);
     const socketRef = useRef();
 
-    console.log(messages);
+    
 
     useEffect(() => {
         socketRef.current = io(socket_url, {
@@ -20,9 +20,9 @@ export default function Room(languageRoom) {
                 ...message,
                 ownedByCurrentUser: message.senderId === socketRef.current.id
             }
-            console.log(message)
-            setMessages((messages) => [...messages, incomingMessage]);
             console.log(messages)
+            setMessages((messages) => [...messages, incomingMessage]);
+            
         })
         return () => {
             socketRef.current.disconnect();
