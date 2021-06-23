@@ -1,7 +1,7 @@
 import * as Google from "expo-google-app-auth";
 import * as yup from 'yup';
 
-import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Fontisto, Ionicons, Octicons } from "@expo/vector-icons";
 import React, { useContext, useState } from "react";
 
@@ -66,7 +66,7 @@ const Login = ({navigation}) => {
   };
 
   return (
-    <ScrollView style={{ width: "100%" }}>
+    <SafeAreaView style={{ width: "100%", backgroundColor: 'white' }}>
       <View style={styles.container}>
         <View style={styles.innerContainer}>
           <Image source={logo} style={styles.logo} />
@@ -185,7 +185,7 @@ const Login = ({navigation}) => {
         </View>
         <StatusBar style="light" />
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -253,9 +253,12 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     alignItems: "center",
+    backgroundColor: primary
+
   },
   styleFormArea: {
-    width: "90%"
+    width: "90%",
+    
   },
   styledTextInput: {
     backgroundColor: secondary,

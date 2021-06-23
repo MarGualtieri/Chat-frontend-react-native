@@ -228,7 +228,7 @@ export default function Welcome({ navigation }) {
 
             }}
           >
-            <Text style={styles.continuar}>Logout</Text>
+            <Text style={styles.logout}>Logout</Text>
           </TouchableOpacity>
 
         </SafeAreaView>
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
     marginVertical: 0,
     margin: 20,
     borderRadius: 30,
-    backgroundColor: "#1F2937",
+    backgroundColor: "#10B981",
     color: "white",
     textAlign: "center",
     fontSize: 15,
@@ -406,4 +406,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flexDirection: "row"
   },
+  logout: {
+    backgroundColor: "#1F2937" ,
+    marginVertical: 10,
+    margin: 20,
+    borderRadius: 30,
+    color: "white",
+    textAlign: "center",
+    fontSize: 15,
+    padding: 10,
+  }
 });
