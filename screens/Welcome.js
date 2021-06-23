@@ -29,9 +29,10 @@ import logo from "../assets/logo.png";
 export default function Welcome({ navigation }) {
 
   const { authData, setAuthData, applyLogout } = useContext(GlobalContext);
+  const [flagUser, setFlagUser] = useState(0);
 
   //const [currentUser, setCurrentUser] = useState({});
-  
+
 
   const bringUser = async () => {
     const storedUser = await AsyncStorage.getData('@userData');
@@ -42,10 +43,11 @@ export default function Welcome({ navigation }) {
   }
 
   useEffect(() => {
-    
-    bringUser()
 
-  },[]);
+    bringUser()
+    setFlagUser(Math.floor(Math.random()*5))
+
+  }, []);
 
 
   const languages = [
@@ -148,7 +150,7 @@ export default function Welcome({ navigation }) {
                   flexDirection: "row",
                 }}
               >
-                <Image source={espanol} style={styles.banderaIcon} />
+                <Image source={languages[flagUser].idioma} style={styles.banderaIcon} />
                 <Text style={{ color: "white", fontWeight: "bold" }}>
                   {authData.name}
                 </Text>
@@ -161,15 +163,25 @@ export default function Welcome({ navigation }) {
               <View style={{ flexDirection: "row", marginRight: 20 }}>
                 <Image source={logo} style={styles.logo} />
                 <TouchableOpacity onPress={openImagePicker}>
-                  <Image
-                    source={{
-                      uri:
-                        selectedImage !== null
-                          ? selectedImage.localUri
-                          : authData.photoUrl ? authData.photoUrl : "https://upload.wikimedia.org/wikipedia/commons/d/d9/Lionel_Messi_20180626_%28cropped%29.jpg",
-                    }}
-                    style={styles.image}
-                  />
+
+                  {selectedImage == null && (
+                    <Image
+                      source={{
+                        uri: authData.photoUrl ? authData.photoUrl : `https://source.boringavatars.com/bauhaus/120/${authData.name}?colors=FFFFFF,EDF3A2,6EEEF1,292C37,10B981`,
+                      }}
+                      style={styles.image}
+                    />
+
+                  )}
+                  {selectedImage !== null && (
+                    <Image
+                      source={{
+                        uri: selectedImage.localUri,
+                      }}
+                      style={styles.image}
+                    />
+                  )}
+
                 </TouchableOpacity>
               </View>
             </View>
@@ -407,7 +419,7 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   },
   logout: {
-    backgroundColor: "#1F2937" ,
+    backgroundColor: "#1F2937",
     marginVertical: 10,
     margin: 20,
     borderRadius: 30,

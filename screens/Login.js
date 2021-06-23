@@ -92,8 +92,8 @@ const Login = ({navigation}) => {
               })
               if (response.ok) {
                 const res = await response.json()
-                setAuthenticated(true);
                 await AsyncStorage.storeData('@userData', res.user)
+                setAuthenticated(true);
               } else {
                 alert("Invalid e-mail or password")
               }
@@ -241,7 +241,6 @@ const styles = StyleSheet.create({
     height: 90,
     width: 120,
     resizeMode: "contain",
-
   },
   container: {
     flex: 1,
