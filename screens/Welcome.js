@@ -166,7 +166,7 @@ export default function Welcome({ navigation }) {
                       uri:
                         selectedImage !== null
                           ? selectedImage.localUri
-                          : "https://upload.wikimedia.org/wikipedia/commons/d/d9/Lionel_Messi_20180626_%28cropped%29.jpg",
+                          : authData.photoUrl ? authData.photoUrl : "https://upload.wikimedia.org/wikipedia/commons/d/d9/Lionel_Messi_20180626_%28cropped%29.jpg",
                     }}
                     style={styles.image}
                   />

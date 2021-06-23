@@ -157,7 +157,6 @@ const styles = StyleSheet.create({
   },
   window: {
     flexDirection: "column",
-    //height: 900,
     padding: 5,
     flex: 1,
     backgroundColor: "coral"
@@ -182,7 +181,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#dddddd",
     padding: 5,
     marginVertical: 8,
-    //marginHorizontal: 5,
     borderRadius:10,
     marginLeft: 100,
     

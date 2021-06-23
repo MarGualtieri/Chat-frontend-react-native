@@ -13,9 +13,8 @@ import { StatusBar } from "expo-status-bar";
 import logo from "../assets/logo.png";
 
 const URL_API = "http://apichathello.herokuapp.com/login";
-//const URL_APIGOOGLE = "";
 const ANDROID = `505663916153-e72rc2raa3b8dmjb34ggbsl62r3rhkiu.apps.googleusercontent.com`
-const IOS = `[505663916153-nngtmvufna0jp4m5enatmpft0o7imb5l.apps.googleusercontent.com](http://505663916153-nngtmvufna0jp4m5enatmpft0o7imb5l.apps.googleusercontent.com/)`
+const IOS = `505663916153-nngtmvufna0jp4m5enatmpft0o7imb5l.apps.googleusercontent.com`
 
 const reviewSchema = yup.object({
   email: yup
@@ -53,17 +52,16 @@ const Login = ({navigation}) => {
       const { type, user } = await Google.logInAsync(config);
 
       if (type === "success") {
-        // Then you can use the Google REST API
         applyAuthentication(user)
-        console.log("Login success, navigating to Welcome");
+        console.log("Success, navigating to Welcome");
 
         const token = onSignIn(user);
-
-        navigation.navigate("Welcome", { userId: res.user._id, token: res.token })
-
+        setAuthData(user)
+        await AsyncStorage.storeData('@userData', user)
+        setAuthenticated(true)
       }
     } catch (error) {
-      console.log("LoginScreen.js 19 | error with login", error);
+      console.log("Error Login", error);
     }
   };
 
