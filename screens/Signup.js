@@ -98,7 +98,7 @@ const Signup = ({ navigation }) => {
                   email: values.email,
                   password: values.password,
                   language: "English",
-                  age: 25
+                  age: dob
                 })
               }).catch(err => {
                 if (err & err.message) {
@@ -138,13 +138,14 @@ const Signup = ({ navigation }) => {
                   placeholderTextColor={darkLight}
                   onChangeText={props.handleChange("email")}
                   onBlur={props.handleBlur("email")}
+                  autoCapitalize="none"
                   value={props.values.email}
                   keyboardType="email-address"
                 />
                 <Text style={styles.messageBoxRed}> {props.touched.email && props.errors.email}</Text>
 
 
-                <MyTextInput
+                <MyTextInput 
                   label="Date of Birth"
                   icon="calendar"
                   placeholder="YYYY/MM/DD"

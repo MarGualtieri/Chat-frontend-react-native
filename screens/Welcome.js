@@ -22,33 +22,28 @@ import {
 import AsyncStorage from "../utils/AsyncStorage";
 import GlobalContext from "../components/global/context/index";
 import { MaterialIcons } from "@expo/vector-icons";
+import { PersonasAvatar } from "react-native-personas-avatar";
 import { StatusBar } from "expo-status-bar";
 import logo from "../assets/logo.png";
 
 //-----------------------------------Functions and States--------------------------
 export default function Welcome({ navigation }) {
-
   const { authData, setAuthData, applyLogout } = useContext(GlobalContext);
   const [flagUser, setFlagUser] = useState(0);
 
   //const [currentUser, setCurrentUser] = useState({});
 
-
   const bringUser = async () => {
-    const storedUser = await AsyncStorage.getData('@userData');
+    const storedUser = await AsyncStorage.getData("@userData");
     if (storedUser) {
-      setAuthData(storedUser)
+      setAuthData(storedUser);
     }
-
-  }
+  };
 
   useEffect(() => {
-
-    bringUser()
-    setFlagUser(Math.floor(Math.random()*5))
-
+    bringUser();
+    setFlagUser(Math.floor(Math.random() * 5));
   }, []);
-
 
   const languages = [
     { id: 1, name: "English", idioma: ingles, check: false },
@@ -57,10 +52,14 @@ export default function Welcome({ navigation }) {
     { id: 4, name: "German", idioma: aleman, check: false },
     { id: 5, name: "Dutch", idioma: holandes, check: false },
   ];
+  const uriPicture =
+    "https://source.boringavatars.com/bauhaus/120/" +
+    authData.name +
+    "?colors=FFFFFF,EDF3A2,6EEEF1,292C37,10B981";
 
+    
   const [selectedImage, setSelectedImage] = useState(null);
   const [text, onChangeOrigen] = React.useState("Choose a language");
-
 
   const [banderas, setBanderas] = useState(languages);
 
@@ -142,7 +141,6 @@ export default function Welcome({ navigation }) {
               </TouchableOpacity>
               {/*-----------------titulo nombre usuario---------------*/}
               <TouchableOpacity
-
                 onPress={() => navigation.navigate("Profile")}
                 style={{
                   justifyContent: "center",
@@ -150,7 +148,10 @@ export default function Welcome({ navigation }) {
                   flexDirection: "row",
                 }}
               >
-                <Image source={languages[flagUser].idioma} style={styles.banderaIcon} />
+                <Image
+                  source={languages[flagUser].idioma}
+                  style={styles.banderaIcon}
+                />
                 <Text style={{ color: "white", fontWeight: "bold" }}>
                   {authData.name}
                 </Text>
@@ -163,16 +164,25 @@ export default function Welcome({ navigation }) {
               <View style={{ flexDirection: "row", marginRight: 20 }}>
                 <Image source={logo} style={styles.logo} />
                 <TouchableOpacity onPress={openImagePicker}>
+                  {selectedImage == null &&
+                    !authData.photoUrl(
+                      <PersonasAvatar
+                        style={{
+                          width: 200,
+                          height: 200,
+                        }}
+                      />
+                    )}
 
                   {selectedImage == null && (
                     <Image
                       source={{
-                        uri: authData.photoUrl ? authData.photoUrl : `https://source.boringavatars.com/bauhaus/120/${authData.name}?colors=FFFFFF,EDF3A2,6EEEF1,292C37,10B981`,
+                        uri: authData.photoUrl,
                       }}
                       style={styles.image}
                     />
-
                   )}
+
                   {selectedImage !== null && (
                     <Image
                       source={{
@@ -181,7 +191,6 @@ export default function Welcome({ navigation }) {
                       style={styles.image}
                     />
                   )}
-
                 </TouchableOpacity>
               </View>
             </View>
@@ -205,30 +214,30 @@ export default function Welcome({ navigation }) {
         {/*-----------------BANDERAS---------------*/}
         <SafeAreaView>
           <View style={{ flexDirection: "row", marginTop: 5 }}>
-            {
-              banderas.map((idioma) => {
-                return (
-                  <TouchableOpacity onPress={() => {
-                    asignarOrigen(idioma.id)
-                    checkFlag(idioma.id)
-                  }
-                  }>
-                    <Image
-                      source={idioma.idioma}
-                      style={idioma.check ? styles.banderaChecked : styles.bandera}
-                    />
-                  </TouchableOpacity>
-                )
-              })
-            }
+            {banderas.map((idioma) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    asignarOrigen(idioma.id);
+                    checkFlag(idioma.id);
+                  }}
+                >
+                  <Image
+                    source={idioma.idioma}
+                    style={
+                      idioma.check ? styles.banderaChecked : styles.bandera
+                    }
+                  />
+                </TouchableOpacity>
+              );
+            })}
           </View>
 
           <Text style={styles.input}>{text}</Text>
 
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("Chat", { languageRoom: text })
-
+              navigation.navigate("Chat", { languageRoom: text });
             }}
           >
             <Text style={styles.continuar}>Chat</Text>
@@ -236,13 +245,11 @@ export default function Welcome({ navigation }) {
 
           <TouchableOpacity
             onPress={() => {
-              applyLogout()
-
+              applyLogout();
             }}
           >
             <Text style={styles.logout}>Logout</Text>
           </TouchableOpacity>
-
         </SafeAreaView>
         <StatusBar style="light" />
       </View>
@@ -255,7 +262,7 @@ export default function Welcome({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
-    flex: 1,
+    //flex: 1,
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
@@ -416,7 +423,7 @@ const styles = StyleSheet.create({
     padding: 5,
     marginTop: 5,
     borderRadius: 10,
-    flexDirection: "row"
+    flexDirection: "row",
   },
   logout: {
     backgroundColor: "#1F2937",
@@ -427,5 +434,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 15,
     padding: 10,
-  }
+  },
 });

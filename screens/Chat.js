@@ -42,7 +42,8 @@ export default function Chat({ route, navigation }) {
                 <Text style={styles.titleRoom}> {languageRoom} Room </Text>
             </View>
             <View style={styles.windowChat}>
-                <ScrollView style={styles.messages}>
+                <ScrollView style={styles.messages}   ref={scrollRef}
+      onContentSizeChange={() => scrollRef.current.scrollToEnd({ animated: true })}>
 
 
                     <FlatList
@@ -52,7 +53,11 @@ export default function Chat({ route, navigation }) {
 
                     />
 
-                </ScrollView >
+                </ScrollView>
+
+
+
+                
                 <View style={styles.row}>
                     <View style={styles.windowInput}>
                         <TextInput
@@ -60,7 +65,8 @@ export default function Chat({ route, navigation }) {
                             type="text"
                             value={newMessage}
                             style={styles.textInput}
-                            onChange={handleNewMessageChange}
+                            // onChangeText={handleNewMessageChange}
+                             onChangeText={(text)=>setNewMessage(text)}
                         />
                     </View>
                     <View style={styles.buttonContainer}>

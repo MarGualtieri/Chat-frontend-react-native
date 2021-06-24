@@ -7,8 +7,11 @@ const ListaPerfil = (props) => {
     <View style={styles.flatContainer}>
       <View style={styles.container}>
         <Text style={styles.flat}>Name: {props.textNombre}</Text>
+       {console.log(props.textNombre)}
         <Text style={styles.flat}>Language: {props.textIdioma}</Text>
+        {console.log(props.textIdioma)}
         <Text style={styles.flat}>Age: {props.textEdad}</Text>
+        {console.log(props.textEdad)}
       </View>
     </View>
   );

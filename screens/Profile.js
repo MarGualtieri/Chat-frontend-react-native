@@ -19,16 +19,21 @@ import ListaPerfil from "../components/ListaPerfil";
 export default function Profile({ navigation }) {
   const { authData, setAuthData } = useContext(GlobalContext);
 
-  const [nameUser, setNameUser] = useState('');
-  const [languageUser, setLanguageUser] = useState('');
-  const [ageUser, setAgeUser] = useState('');
+  const [nameUser, setNameUser] = useState();
+  const [languageUser, setLanguageUser] = useState();
+  const [ageUser, setAgeUser] = useState();
   const [currentUser, setCurrentUser] = useState({});
 
   const saveChanges = () => {
-    const userUpdated = { ...currentUser, name: nameUser, age: ageUser, language: languageUser };
-    AsyncStorage.storeData("@userData", userUpdated)
-    setAuthData(userUpdated)
-    navigation.navigate("Welcome");
+    const userUpdated = {
+      ...currentUser,
+      name: nameUser,
+      age: ageUser,
+      language: languageUser,
+    };
+    AsyncStorage.storeData("@userData", userUpdated);
+    setAuthData(userUpdated);
+    //navigation.navigate("Welcome");
   };
 
   {
@@ -40,7 +45,6 @@ export default function Profile({ navigation }) {
   };
   const textHandlerLanguage = (event) => {
     setLanguageUser(event.target.value);
-
   };
   const textHandlerAge = (event) => {
     setAgeUser(event.target.value);
@@ -53,9 +57,9 @@ export default function Profile({ navigation }) {
     fetch(userdb, {
       method: "PUT",
       headers: {
-        'Accept': 'application/json',
+        Accept: "application/json",
         //'Authorization': `Bearer  `,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         name: nameUser,
@@ -65,7 +69,7 @@ export default function Profile({ navigation }) {
     })
       .then((res) => {
         alert("Change was successful");
-        console.log(nameUser, languageUser, ageUser)
+        console.log(nameUser, languageUser, ageUser);
         saveChanges();
       })
       .catch((error) => alert(error.message));
@@ -75,18 +79,16 @@ export default function Profile({ navigation }) {
     /*-----------------app---------------*/
   }
 
-
   async function bringUserData() {
-    const user = await AsyncStorage.getData('@userData');
+    const user = await AsyncStorage.getData("@userData");
     if (user) {
-      setCurrentUser(user)
+      setCurrentUser(user);
     }
   }
 
   useEffect(() => {
-    bringUserData()
-
-  }, [])
+    bringUserData();
+  }, []);
 
   return (
     <ScrollView style={{ width: "100%" }}>
@@ -109,23 +111,44 @@ export default function Profile({ navigation }) {
               </View>
               <TextInput
                 style={styles.flat}
-                onChangeText={(text) => setNameUser(text)}
+                onChangeText={(text) => {
+                  if (text !== "") {
+                    setNameUser(text);
+                  } else {
+                    setNameUser(authData.name);
+                  }
+                }}
                 onChange={textHandlerName}
                 placeholder="Edit your name"
+                autoCapitalize="none"
               />
 
               <TextInput
                 style={styles.flat}
-                onChangeText={(text) => setLanguageUser(text)}
+                onChangeText={(text) => {
+                  if (text !== "") {
+                    setLanguageUser(text);
+                  } else {
+                    setLanguageUser(authData.language);
+                  }
+                }}
                 onChange={textHandlerLanguage}
                 placeholder="Edit your language"
+                autoCapitalize="none"
               />
 
               <TextInput
                 style={styles.flat}
-                onChangeText={(text) => setAgeUser(text)}
-                //onChange={textHandlerAge}
+                onChangeText={(text) => {
+                  if (text !== "") {
+                    setAgeUser(text);
+                  } else {
+                    setAgeUser(authData.age);
+                  }
+                }}
+                onChange={textHandlerAge}
                 placeholder="Edit your age"
+                autoCapitalize="none"
                 keyboardType="numeric"
               />
               <View style={{ marginHorizontal: 60, marginVertical: 20 }}>

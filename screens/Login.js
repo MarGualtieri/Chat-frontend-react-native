@@ -67,6 +67,7 @@ const Login = ({navigation}) => {
 
   return (
     <ScrollView style={{ width: "100%" }}>
+      
       <View style={styles.container}>
         <View style={styles.innerContainer}>
           <Image source={logo} style={styles.logo} />
@@ -109,6 +110,7 @@ const Login = ({navigation}) => {
                   icon='mail'
                   placeholder='isa@gmail.com'
                   placeholderTextColor={darkLight}
+                  autoCapitalize = "none"
                   onChangeText={props.handleChange('email')}
                   onBlur={props.handleBlur('email')}
                   value={props.values.email}
@@ -120,6 +122,7 @@ const Login = ({navigation}) => {
                   label='Password'
                   icon='lock'
                   placeholder='********'
+                  autoCapitalize = "none"
                   placeholderTextColor={darkLight}
                   onChangeText={props.handleChange('password')}
                   onBlur={props.handleBlur('password')}
